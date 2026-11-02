@@ -1,0 +1,25 @@
+# Local secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# JavaScript / build output
+node_modules/
+.next/
+dist/
+build/
+coverage/
+*.log
+
+# macOS
+.DS_Store
