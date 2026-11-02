@@ -4,9 +4,23 @@
 !.env.example
 *.pem
 *.key
+.envrc
+.direnv/
+.npmrc
+.pypirc
+
+# Local configuration (shared VS Code settings remain tracked)
+config.local.*
+settings.local.*
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+*.code-workspace
 
 # Python
 .venv/
+venv/
 __pycache__/
 *.py[cod]
 .pytest_cache/
