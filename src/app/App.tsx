@@ -9,6 +9,8 @@ import { dateLabel, moscowDay } from "../features/studies/dates.ts";
 import { ResourceState, useResource } from "./resource.tsx";
 import { Icon } from "./Icon.tsx";
 import { RequestsPanel, NotificationsPanel } from "./extensions.tsx";
+import { ThemeToggle } from "./ThemeToggle.tsx";
+import { Dashboard } from "./Dashboard.tsx";
 
 const navigation = [
   { id: "home", title: "Главная", icon: "home" },
@@ -79,7 +81,7 @@ export function App() {
   if (leaving)
     return (
       <main className="full-state" aria-live="polite">
-        <span className="brand-mark">к.</span>
+        <span className="brand-mark">К</span>
         <h1>
           {logoutError ? "Не удалось завершить сессию" : "Выходим из кабинета…"}
         </h1>
@@ -100,7 +102,7 @@ export function App() {
   if (auth.status !== "ready")
     return (
       <main className="full-state">
-        <span className="brand-mark">к.</span>
+        <span className="brand-mark">К</span>
         <h1>
           {auth.status === "error"
             ? "Не удалось проверить сессию"
@@ -134,17 +136,13 @@ export function App() {
   );
 }
 
-function StudentPortal({
-  api,
-  sessionKey,
-  onSignOut,
-}: {
-  api: Api;
-  sessionKey: string;
-  onSignOut: () => void;
+function StudentPortal({ api, sessionKey, onSignOut }: {
+  api: Api; sessionKey: string; onSignOut: () => void;
 }) {
   const [page, setPage] = useState<Page>(currentPage);
   const [notificationsRevision, setNotificationsRevision] = useState(0);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menu = useRef<HTMLDialogElement>(null);
   const heading = useRef<HTMLHeadingElement>(null);
   const firstRender = useRef(true);
   const load = useCallback(async () => {
@@ -152,281 +150,103 @@ function StudentPortal({
     if (profile.student_id !== sessionKey) throw new Error("Profile mismatch");
     return profile;
   }, [api, sessionKey]);
-  const { state, retry } = useResource(`${sessionKey}:profile`, load);
+  const { state, retry } = useResource(sessionKey + ":profile", load);
   useEffect(() => {
     const change = () => setPage(currentPage());
     window.addEventListener("hashchange", change);
     return () => window.removeEventListener("hashchange", change);
   }, []);
   useEffect(() => {
-    if (firstRender.current) {
-      firstRender.current = false;
-      return;
-    }
+    if (firstRender.current) { firstRender.current = false; return; }
     heading.current?.focus();
     window.scrollTo({ top: 0 });
   }, [page]);
+  useEffect(() => {
+    if (menuOpen) {
+      menu.current?.showModal();
+      const previous = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => { document.body.style.overflow = previous; };
+    }
+    menu.current?.close();
+  }, [menuOpen]);
+  const closeMenu = () => { menu.current?.close(); setMenuOpen(false); };
   const active = navigation.find((item) => item.id === page)!;
   const profile = state.status === "ready" ? state.data : null;
-  const name = profile?.full_name ?? "Личный кабинет";
   const today = moscowDay();
-  return (
-    <div className="portal-layout">
-      <a
-        className="skip-link"
-        href="#main-content"
-        onClick={(event) => {
-          event.preventDefault();
-          document.getElementById("main-content")?.focus();
-        }}
-      >
-        К содержимому
-      </a>
-      <aside className="sidebar">
-        <a className="brand" href="#home">
-          <span className="brand-mark">к.</span>кампус
-          <span className="brand-dot" />
-        </a>
-        <span className="sidebar-label">ПРОСТРАНСТВО СТУДЕНТА</span>
-        <nav aria-label="Основная навигация">
-          {navigation.map((item) => (
-            <a
-              key={item.id}
-              href={`#${item.id}`}
-              aria-current={page === item.id ? "page" : undefined}
-            >
-              <Icon name={item.icon} />
-              <span>{item.title}</span>
-              {page === item.id && <i />}
-            </a>
-          ))}
-        </nav>
-        <div className="sidebar-bottom">
-          <div className="sidebar-note">
-            <Icon name="spark" />
-            <strong>
-              Твой день.
-              <br />
-              Без лишней суеты.
-            </strong>
-            <p>Всё важное — рядом.</p>
-          </div>
-          <button className="logout" onClick={onSignOut}>
-            <Icon name="logout" />
-            Выйти из кабинета
-          </button>
-          <p className="sidebar-legal">
-            Конкурсный концепт.
-            <br />
-            Не официальный сервис вуза.
-          </p>
-        </div>
-      </aside>
-      <div className="workspace">
-        <header className="topbar">
-          <span className="breadcrumb">
-            Личный кабинет <span>/</span> <strong>{active.title}</strong>
-          </span>
-          <div className="topbar-right">
-            <span className="today-label">
-              {dateLabel(today, {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })}
-            </span>
-            <a
-              className="icon-button"
-              href="#notifications"
-              aria-label="Открыть уведомления"
-            >
-              <Icon name="bell" />
-            </a>
-            <a className="avatar" href="#profile" aria-label="Открыть профиль">
-              {profile ? initials(name) : "·"}
-            </a>
-          </div>
-        </header>
-        <main id="main-content" className="main-content" tabIndex={-1}>
-          <div className="page-heading">
-            <div>
-              <span className="eyebrow">
-                {page === "home"
-                  ? "ВСЁ ВАЖНОЕ — В ОДНОМ МЕСТЕ"
-                  : "ЛИЧНЫЙ КАБИНЕТ"}
-              </span>
-              <h1 ref={heading} tabIndex={-1}>
-                {page === "home" ? (
-                  <>
-                    Привет{profile ? `, ${name.split(" ")[0]}` : ""}
-                    <span className="accent">.</span>
-                  </>
-                ) : (
-                  active.title
-                )}
-              </h1>
-              <p className="muted">
-                {page === "home"
-                  ? "Хороший день начинается с ясного плана."
-                  : (
-                      {
-                        schedule: "Планируй неделю. Мы собрали всё по порядку.",
-                        grades: "Твой прогресс — понятный и без лишних таблиц.",
-                        profile: "Всё, что учебная система знает о тебе.",
-                        requests: "Решай вопросы с деканатом в своём ритме.",
-                        notifications:
-                          "Важные новости, изменения и напоминания.",
-                      } as const
-                    )[page]}
-              </p>
-            </div>
-            {page === "home" && (
-              <span className="date-stamp">
-                <Icon name="calendar" />
-                {dateLabel(today, {
-                  weekday: "long",
-                  day: "numeric",
-                  month: "long",
-                })}
-              </span>
-            )}
-          </div>
-          {page === "home" && (
-            <>
-              <section className="welcome-banner">
-                <div>
-                  <span className="eyebrow light">
-                    БОЛЬШЕ ВРЕМЕНИ ДЛЯ ГЛАВНОГО
-                  </span>
-                  <h2>
-                    Учёба в порядке.
-                    <br />
-                    <span>День — в твоих руках.</span>
-                  </h2>
-                  <p>
-                    Посмотри план на неделю и освободи голову
-                    <br className="desktop-only" /> для того, что действительно
-                    интересно.
-                  </p>
-                  <a className="button banner-button" href="#schedule">
-                    Моё расписание
-                    <Icon name="arrow" size={18} />
-                  </a>
-                </div>
-                <div className="banner-art" aria-hidden="true">
-                  <div className="art-orbit" />
-                  <div className="art-tile">
-                    <Icon name="calendar" size={46} />
-                    <span>ТВОЙ ПЛАН</span>
-                    <b>{new Date(`${today}T12:00:00+03:00`).getUTCDate()}</b>
-                  </div>
-                  <span className="art-spark">
-                    <Icon name="spark" size={48} />
-                  </span>
-                  <span className="art-check">
-                    <Icon name="check" />
-                  </span>
-                </div>
-              </section>
-              <div className="quick-links">
-                <a href="#schedule">
-                  <span className="quick-icon sage">
-                    <Icon name="calendar" />
-                  </span>
-                  <div>
-                    <strong>Расписание</strong>
-                    <span>Сегодня и на неделю</span>
-                  </div>
-                  <Icon name="chevron" size={18} />
-                </a>
-                <a href="#requests">
-                  <span className="quick-icon peach">
-                    <Icon name="document" />
-                  </span>
-                  <div>
-                    <strong>Справки и заявки</strong>
-                    <span>Без очереди в деканат</span>
-                  </div>
-                  <Icon name="chevron" size={18} />
-                </a>
-                <a href="#grades">
-                  <span className="quick-icon lavender">
-                    <Icon name="grades" />
-                  </span>
-                  <div>
-                    <strong>Успеваемость</strong>
-                    <span>Всё о твоём прогрессе</span>
-                  </div>
-                  <Icon name="chevron" size={18} />
-                </a>
-              </div>
-              <div className="dashboard-grid">
-                <Schedule api={api} sessionKey={sessionKey} compact />
-                <div className="dashboard-side">
-                  <Grades api={api} sessionKey={sessionKey} compact />
-                  <section className="small-note">
-                    <Icon name="spark" />
-                    <h3>Ты больше, чем твои оценки.</h3>
-                    <p>Оставь в расписании время и для себя.</p>
-                    <a href="#grades">
-                      Посмотреть результаты <Icon name="arrow" size={17} />
-                    </a>
-                  </section>
-                </div>
-              </div>
-            </>
-          )}
-          {page === "schedule" && (
-            <Schedule api={api} sessionKey={sessionKey} />
-          )}
-          {page === "grades" && <Grades api={api} sessionKey={sessionKey} />}
-          {page === "profile" && (
-            <>
-              <ResourceState state={state} retry={retry} />
-              {profile && <ProfilePanel profile={profile} />}
-            </>
-          )}
-          {page === "requests" &&
-            (RequestsPanel ? (
-              <RequestsPanel
-                api={api}
-                sessionKey={sessionKey}
-                onSubmitted={() => setNotificationsRevision((n) => n + 1)}
-              />
-            ) : (
-              <PendingIntegration />
-            ))}
-          {page === "notifications" &&
-            (NotificationsPanel ? (
-              <NotificationsPanel
-                api={api}
-                sessionKey={sessionKey}
-                refreshKey={notificationsRevision}
-              />
-            ) : (
-              <PendingIntegration />
-            ))}
-        </main>
-        <footer className="page-footer">
-          <span>кампус · создано для студенческой жизни</span>
-          <span>Конкурсный концепт · Все данные вымышлены</span>
-        </footer>
+  const firstName = profile?.full_name.trim().split(/\s+/)[0];
+  const identity = <>
+    <span className="avatar">{profile ? initials(profile.full_name) : "·"}</span>
+    <span><strong>{profile?.full_name ?? "Личный кабинет"}</strong>
+      <small>{profile ? profile.group_name + " · " + profile.course + " курс" : "Загружаем профиль…"}</small>
+    </span>
+  </>;
+  const nav = (mobile = false) => <nav aria-label={mobile ? "Мобильная навигация" : "Основная навигация"}>
+    {navigation.map(item => <a key={item.id} href={"#" + item.id}
+      onClick={mobile ? closeMenu : undefined} aria-current={page === item.id ? "page" : undefined}>
+      <Icon name={item.icon} /><span>{item.title}</span>
+    </a>)}
+  </nav>;
+  return <div className="portal-layout">
+    <a className="skip-link" href="#main-content" onClick={event => {
+      event.preventDefault(); document.getElementById("main-content")?.focus();
+    }}>К содержимому</a>
+    <aside className="sidebar">
+      <a className="brand" href="#home"><span className="brand-mark">К</span>кампус</a>
+      {nav()}
+      <div className="sidebar-bottom">
+        <a className="student-identity" href="#profile">{identity}</a>
+        <button className="logout" onClick={onSignOut}><Icon name="logout" />Выйти из кабинета</button>
       </div>
+    </aside>
+    <dialog ref={menu} className="mobile-dialog" aria-label="Меню кабинета"
+      onCancel={event => { event.preventDefault(); closeMenu(); }}
+      onClick={event => { if (event.target === event.currentTarget) closeMenu(); }}>
+      <div className="mobile-dialog-body">
+        <div className="mobile-dialog-heading"><a className="brand" href="#home" onClick={closeMenu}>
+          <span className="brand-mark">К</span>кампус</a>
+          <button className="icon-button" aria-label="Закрыть меню" onClick={closeMenu}><Icon name="close" /></button>
+        </div>
+        {nav(true)}
+        <a className="student-identity" href="#profile" onClick={closeMenu}>{identity}</a>
+        <button className="logout" onClick={() => { closeMenu(); onSignOut(); }}><Icon name="logout" />Выйти из кабинета</button>
+        <p className="small muted">Конкурсный концепт · Не официальный сервис вуза</p>
+      </div>
+    </dialog>
+    <div className="workspace">
+      <header className="topbar">
+        <div className="page-heading">
+          <p className="today-label">{dateLabel(today, { weekday: "long", day: "numeric", month: "long" })}</p>
+          <h1 ref={heading} tabIndex={-1}>{page === "home" ? (firstName ? `Привет, ${firstName}. Твой учебный день` : "Твой учебный день") : active.title}</h1>
+        </div>
+        <div className="topbar-right">
+          <ThemeToggle />
+          <a className="icon-button" href="#notifications" aria-label="Открыть уведомления"><Icon name="bell" /></a>
+          <a className="avatar topbar-avatar" href="#profile" aria-label="Открыть профиль">{profile ? initials(profile.full_name) : "·"}</a>
+          <button className="icon-button menu-button" aria-label="Открыть меню" aria-expanded={menuOpen}
+            onClick={() => setMenuOpen(true)}><Icon name="menu" /></button>
+        </div>
+      </header>
+      <main id="main-content" className="main-content" tabIndex={-1}>
+        <div className="route-content" key={page}>
+          {page === "home" && <Dashboard api={api} sessionKey={sessionKey} profileState={state} retryProfile={retry} />}
+          {page === "schedule" && <Schedule api={api} sessionKey={sessionKey} />}
+          {page === "grades" && <Grades api={api} sessionKey={sessionKey} />}
+          {page === "profile" && <><ResourceState state={state} retry={retry} />{profile && <ProfilePanel profile={profile} />}</>}
+          {page === "requests" && (RequestsPanel ? <RequestsPanel api={api} sessionKey={sessionKey}
+            onSubmitted={() => setNotificationsRevision(n => n + 1)} /> : <PendingIntegration />)}
+          {page === "notifications" && (NotificationsPanel ? <NotificationsPanel api={api} sessionKey={sessionKey}
+            refreshKey={notificationsRevision} /> : <PendingIntegration />)}
+        </div>
+      </main>
+      <footer className="page-footer">Конкурсный концепт<span aria-hidden="true">·</span>Не официальный сервис вуза<span aria-hidden="true">·</span>Все данные вымышлены</footer>
     </div>
-  );
+  </div>;
 }
 function PendingIntegration() {
-  return (
-    <section className="panel empty-state">
-      <Icon name="document" size={32} />
-      <h2>Раздел готовится к подключению</h2>
-      <p>
-        Он появится после интеграции модуля. Данные и заявки здесь пока не
-        создаются.
-      </p>
-      <a className="button secondary" href="#home">
-        На главную
-      </a>
-    </section>
-  );
+  return <section className="panel empty-state"><Icon name="document" size={32} />
+    <h2>Раздел готовится к подключению</h2>
+    <p>Он появится после интеграции модуля. Данные и заявки здесь пока не создаются.</p>
+    <a className="button secondary" href="#home">На главную</a>
+  </section>;
 }

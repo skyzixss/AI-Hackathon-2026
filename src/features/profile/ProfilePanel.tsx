@@ -14,7 +14,7 @@ export function ProfilePanel({ profile }: { profile: Profile }) {
     <section className="panel profile-panel" aria-labelledby="profile-title">
       <div className="profile-identity">
         <div className="avatar large">{initials(profile.full_name)}</div>
-        <span className="eyebrow">ПРОФИЛЬ СТУДЕНТА</span>
+        <span className="eyebrow">Данные студента</span>
         <h2 id="profile-title">{profile.full_name}</h2>
         <span className="pill">
           <Icon name="check" size={15} /> Учётная запись студента

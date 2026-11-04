@@ -168,7 +168,8 @@ try {
               exam_at: `${today}T09:00:00+03:00`,
             },
           ];
-      } else throw new Error(`Unexpected test request: ${url.pathname}`);
+      } else if (url.pathname.endsWith("/requests") || url.pathname.endsWith("/notifications")) body = [];
+      else throw new Error(`Unexpected test request: ${url.pathname}`);
       await route.fulfill({
         status,
         headers: {
@@ -189,7 +190,16 @@ try {
         .click();
     }
     async function navigate(hash) {
-      await page.locator(`nav a[href="#${hash}"]`).click();
+      if (width === 360) {
+        await page.getByRole("button", { name: "Открыть меню", exact: true }).click();
+        await page.locator(`dialog nav a[href="#${hash}"]`).click();
+      } else await page.locator(`.sidebar nav a[href="#${hash}"]`).click();
+    }
+    async function logout(target = page) {
+      if (width === 360) {
+        await target.getByRole("button", { name: "Открыть меню", exact: true }).click();
+        await target.getByRole("dialog").getByRole("button", { name: "Выйти из кабинета", exact: true }).click();
+      } else await target.getByRole("button", { name: "Выйти из кабинета", exact: true }).click();
     }
     await page.goto(process.env.PORTAL_URL || "http://127.0.0.1:5173");
     await login("student-a@example.test", "wrong-password");
@@ -199,7 +209,7 @@ try {
       .waitFor();
     checks++;
     await login();
-    await page.getByRole("heading", { name: "Привет, Демо." }).waitFor();
+    await page.getByRole("heading", { name: "Привет, Демо. Твой учебный день" }).waitFor();
     await page
       .getByText("Тестовые алгоритмы", { exact: true })
       .first()
@@ -208,6 +218,7 @@ try {
     await check(
       page
         .getByText("Аудитория изменена: Демо-101", { exact: true })
+        .first()
         .isVisible(),
     );
     await check(
@@ -275,11 +286,11 @@ try {
     slowSchedule = true;
     await navigate("schedule");
     await page.getByRole("status").waitFor();
-    await page.getByRole("button", { name: "Выйти из кабинета" }).click();
+    await logout();
     await page.getByRole("button", { name: "Войти в кабинет" }).waitFor();
     checks++;
     await login("student-b@example.test");
-    await page.getByRole("heading", { name: "Привет, Демо." }).waitFor();
+    await page.getByRole("heading", { name: "Привет, Демо. Твой учебный день" }).waitFor();
     await page
       .getByText("Тестовая экономика", { exact: true })
       .first()
@@ -305,8 +316,8 @@ try {
     );
     const secondTab = await context.newPage();
     await secondTab.goto(process.env.PORTAL_URL || "http://127.0.0.1:5173");
-    await secondTab.getByRole("heading", { name: "Привет, Демо." }).waitFor();
-    await secondTab.getByRole("button", { name: "Выйти из кабинета" }).click();
+    await secondTab.getByRole("heading", { name: "Привет, Демо. Твой учебный день" }).waitFor();
+    await logout(secondTab);
     await page.getByRole("button", { name: "Войти в кабинет" }).waitFor();
     await check(
       page.getByText("Сессия завершена.", { exact: false }).isVisible(),
@@ -314,7 +325,7 @@ try {
     await secondTab.close();
     await login("student-b@example.test");
     await navigate("home");
-    await page.getByRole("heading", { name: "Привет, Демо." }).waitFor();
+    await page.getByRole("heading", { name: "Привет, Демо. Твой учебный день" }).waitFor();
     emptySchedule = true;
     await navigate("schedule");
     await page.getByText("На этот день занятий нет").waitFor();
@@ -327,7 +338,7 @@ try {
       ),
     );
     failLogout = true;
-    await page.getByRole("button", { name: "Выйти из кабинета" }).click();
+    await logout();
     await page
       .getByRole("heading", { name: "Не удалось завершить сессию" })
       .waitFor();
