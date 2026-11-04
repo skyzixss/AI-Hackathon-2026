@@ -217,7 +217,7 @@ function StudentPortal({ api, sessionKey, onSignOut }: {
       <header className="topbar">
         <div className="page-heading">
           <p className="today-label">{dateLabel(today, { weekday: "long", day: "numeric", month: "long" })}</p>
-          <h1 ref={heading} tabIndex={-1}>{page === "home" ? (firstName ? `Привет, ${firstName}` : "Привет") : active.title}</h1>
+          <h1 ref={heading} tabIndex={-1}>{page === "home" ? (firstName ? `Привет, ${firstName}. Твой учебный день` : "Твой учебный день") : active.title}</h1>
         </div>
         <div className="topbar-right">
           <ThemeToggle />
