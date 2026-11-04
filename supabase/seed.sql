@@ -1,0 +1,1 @@
+-- Demo users are provisioned explicitly by scripts/seed-demo.ts; no fixed passwords in Git.

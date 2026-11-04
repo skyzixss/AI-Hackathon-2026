@@ -37,3 +37,9 @@ coverage/
 
 # macOS
 .DS_Store
+
+# Task scratch, generated demo credentials and local infrastructure
+work/
+.wrangler/
+.dev.vars
+.dev.vars.*
