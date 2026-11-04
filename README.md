@@ -285,4 +285,5 @@ CI GitHub запускает TypeScript, клиентские тесты, сбо
 [docs/team-plan.md](docs/team-plan.md).
 
 Команды: `npm run dev`, `npm run build`, `npm run preview`.
-Общий `npm test` включает серверные проверки клиента и unit-тесты UI/заявок (12 тестов).
+Общий `npm test` включает серверные проверки клиента и unit-тесты UI/заявок (15 тестов).
+Редизайн проверен с двумя облачными аккаунтами: [отчёт и снимки](docs/redesign-acceptance.md).

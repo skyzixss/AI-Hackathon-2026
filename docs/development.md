@@ -55,8 +55,10 @@ Security advisor: замечаний нет на момент подготовк
 просмотр сборки. Используются только VITE_SUPABASE_URL и
 VITE_SUPABASE_PUBLISHABLE_KEY из локальной .env; не добавлять VITE_ к secret key.
 
-Общий `npm test` запускает 12 unit-тестов, включая даты, ошибки доступа и
-модель заявок. Live-браузерные проверки и снимки — [integration.md](integration.md).
+Общий `npm test` запускает 15 unit-тестов, включая даты, ошибки доступа,
+модель заявок, выбор занятия и начальную тему. Приёмка редизайна с реальными
+аккаунтами — [redesign-acceptance.md](redesign-acceptance.md);
+предыдущая интеграция — [integration.md](integration.md).
 `npx wrangler deploy --dry-run` прошёл; реальное размещение не выполнялось.
 
 ## Сохранённая облачная конфигурация Auth
