@@ -1,0 +1,29 @@
+{
+  "date": "2026-11-04",
+  "url": "https://student-portal-hackathon.ankajournal-cloudflare.workers.dev",
+  "versionId": "00f38c34-3d5e-4913-950e-8b2ab5205ae0",
+  "sourceCommit": "cd5ffa2069d833a619bb36cd19c05fc195c32e07",
+  "assets": [
+    {
+      "path": "index.html",
+      "sha256": "be009d5c47dbaa45d3c409bc2e2aa0ea5b92b721b0ef28f6b007c44f80373b46",
+      "bytes": 1255
+    },
+    {
+      "path": "assets/Manrope-Variable-DIRNzeTG.ttf",
+      "sha256": "3ae11c49db0455a3cc33e37d380f20fdb8c7f8b41dc07625c177e3d87a9d6ae6",
+      "bytes": 164700
+    },
+    {
+      "path": "assets/index-BAlSBNzA.css",
+      "sha256": "30a74e0b3ee5325c6647b0df918f27c3dd781ceef9284159ad420a32158aa677",
+      "bytes": 32615
+    },
+    {
+      "path": "assets/index-QX5nIb5d.js",
+      "sha256": "752814c3a60f06179bdf01fec82a05c43cb9ea6996fb5f0f8ffcd81a5de94402",
+      "bytes": 499048
+    }
+  ],
+  "spaFallback": true
+}
