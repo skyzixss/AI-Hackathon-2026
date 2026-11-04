@@ -67,6 +67,7 @@ VITE_SUPABASE_PUBLISHABLE_KEY из локальной .env; не добавля�
 Общий `npm test` запускает 22 unit-теста, включая даты, ошибки доступа,
 модель заявок, темы, долги, генераторы демо и API демо-оплаты.
 Live-браузерные проверки исходной интеграции — [integration.md](integration.md).
+Приёмка редизайна с реальными аккаунтами — [redesign-acceptance.md](redesign-acceptance.md).
 `npx wrangler deploy --dry-run` и реальное размещение выполнены;
 побайтная проверка опубликованных assets и браузерная приёмка —
 [deployment.md](deployment.md).

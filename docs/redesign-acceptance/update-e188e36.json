@@ -1,0 +1,18 @@
+{
+  "date": "2026-11-04",
+  "sourceCommit": "e188e36a1a12cdc81a3d6397c2ee37912bc4a42b",
+  "environment": "Local Vite with current real Supabase data; expanded seed NOT applied",
+  "passed": 6,
+  "checks": [
+    "Главная: новые счётчики показывают фактическое отсутствие долгов в текущем облаке",
+    "Пустой фильтр долгов объясняется и не показывает обычную оценку",
+    "Выбор семестра сохраняет понятное пустое состояние долгов",
+    "Выключение фильтра возвращает опубликованную оценку",
+    "360 px light: три показателя и фильтр не переполняют страницу",
+    "360 px dark: три показателя и фильтр не переполняют страницу"
+  ],
+  "limitations": [
+    "New negative-grade examples not present in cloud",
+    "No cloud refresh executed"
+  ]
+}
