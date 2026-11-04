@@ -75,3 +75,10 @@ npx supabase config push --remote=jbzaqvutbybrhjctrexc --workdir config/cloud-au
 необъявленные параметры неизменными. При проверке осталось 0 update и
 11 remote-only различий; это параметры, которые мы намеренно не меняем.
 Локальный CLI авторизован владельцем. Отчёт прогона — ignored work/live-auth-results.json.
+
+После настройки Auth Security Advisor сообщает одно предупреждение:
+проверка утёкших паролей отключена. Она доступна только на Pro и выше
+([документация](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection)).
+В согласованном Free-демо регистрация закрыта, два пароля случайные;
+платный тариф не включался. Это ограничение демо, а не заявление о полной
+готовности к работе с реальными данными.
