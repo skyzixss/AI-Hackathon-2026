@@ -8,7 +8,6 @@ import { numericAverage, gradeTone } from "../features/studies/Grades.tsx";
 import { LessonList } from "../features/studies/Schedule.tsx";
 import { addDays, dateLabel, moscowDay, scheduleRange, timeLabel } from "../features/studies/dates.ts";
 
-const requestStatus = { submitted: "Подана", in_review: "На рассмотрении", ready: "Готово", rejected: "Отклонена" };
 const assessment = { exam: "Экзамен", credit: "Зачёт", coursework: "Курсовая" };
 function More({ href, children }: { href: string; children: React.ReactNode }) {
   return <a className="text-link" href={href}>{children}<Icon name="arrow" size={18} /></a>;
@@ -27,11 +26,9 @@ export function Dashboard({ api, sessionKey, profileState, retryProfile }: {
   const day = selected && selected >= range.start && selected < addDays(range.start, 7) ? selected : today;
   const loadSchedule = useCallback(() => api.schedule(range.from, range.to), [api, range.from, range.to]);
   const loadGrades = useCallback(() => api.grades(), [api]);
-  const loadRequests = useCallback(() => api.requests(), [api]);
   const loadNotifications = useCallback(() => api.notifications(), [api]);
   const schedule = useResource(`${sessionKey}:dashboard:${range.from}`, loadSchedule);
   const grades = useResource(`${sessionKey}:dashboard:grades`, loadGrades);
-  const requests = useResource(`${sessionKey}:dashboard:requests`, loadRequests);
   const notifications = useResource(`${sessionKey}:dashboard:notifications`, loadNotifications);
   const lessons = schedule.state.status === "ready" ? schedule.state.data : [];
   const featured = featuredLesson(lessons.filter(item => moscowDay(new Date(item.starts_at)) === today), now);
@@ -74,15 +71,6 @@ export function Dashboard({ api, sessionKey, profileState, retryProfile }: {
       </div>
       <ResourceState {...schedule} />
       {schedule.state.status === "ready" && <div className="day-content" key={day}><LessonList compact lessons={lessons.filter(item => moscowDay(new Date(item.starts_at)) === day)} /></div>}
-    </section>
-    <section className="panel requests-card" aria-labelledby="requests-heading">
-      <h2 id="requests-heading">Справки и заявки</h2><ResourceState {...requests} />
-      {requests.state.status === "ready" && <>
-        {requests.state.data.length ? <ul className="request-preview">{requests.state.data.slice(0, 2).map(item => <li key={item.id}>
-          <span>{item.kind === "certificate" ? "Справка" : "Заявление"}</span><span className={`status-text status-${item.status}`}>{requestStatus[item.status]}</span>
-        </li>)}</ul> : <div className="dashboard-empty"><Icon name="document" size={32} /><h3>Заявок пока нет</h3><p>Закажи справку онлайн</p></div>}
-        <a className="button secondary" href="#requests">Подать заявку<Icon name="arrow" size={18} /></a>
-      </>}
     </section>
     <section className="panel profile-card" aria-labelledby="profile-heading">
       <h2 id="profile-heading">Мой профиль</h2><ResourceState state={profileState} retry={retryProfile} />
