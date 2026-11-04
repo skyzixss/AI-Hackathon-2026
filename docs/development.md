@@ -89,3 +89,12 @@ npx supabase config push --remote=jbzaqvutbybrhjctrexc --workdir config/cloud-au
 refresh-токен должен получить HTTP 400 и error_code refresh_token_not_found
 или session_not_found. Rate limit и ошибки сервера проваливают проверку.
 Неуспешный прогон перезаписывает локальный отчёт как passed=false.
+
+## Автоматические проверки GitHub
+
+`.github/workflows/backend-checks.yml` запускает TypeScript, клиентские тесты
+и те же 66 проверок RLS на новом PostgreSQL 17 в изолированной сети задания.
+Работает на pull_request и push в main; максимум 10 минут. Секреты Supabase,
+локальная .env и облачная база не используются. Docker-сервис удаляется
+вместе с заданием; наружу порт не опубликован. Реальный Auth/REST тест
+не включён в CI: он меняет демо-данные и завершает сессии.
