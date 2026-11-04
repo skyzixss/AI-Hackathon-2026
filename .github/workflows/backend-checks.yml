@@ -39,7 +39,7 @@ jobs:
         run: npm test
       - name: Production build
         run: npm run build
-      - name: PostgreSQL access isolation
+      - name: PostgreSQL access isolation and demo payments
         env:
           # Hostname of the disposable service on the private job network.
           # No host port, password, Supabase secret or existing database is used.

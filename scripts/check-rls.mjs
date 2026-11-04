@@ -1,8 +1,10 @@
 import pg from 'pg';
 import { readFile, readdir } from 'node:fs/promises';
 import assert from 'node:assert/strict';
+import { checkTuition } from './check-tuition.mjs';
 if (!process.env.TEST_PG_SOCKET) throw new Error('Run through npm run test:db, not against an existing database');
-const db=new pg.Client({host:process.env.TEST_PG_SOCKET,port:Number(process.env.TEST_PG_PORT),user:'postgres',database:'postgres'});
+const config={host:process.env.TEST_PG_SOCKET,port:Number(process.env.TEST_PG_PORT),user:'postgres',database:'postgres'};
+const db=new pg.Client(config);
 await db.connect();
 let count=0;
 const A='11111111-1111-4111-8111-111111111111', B='22222222-2222-4222-8222-222222222222';
@@ -63,4 +65,5 @@ try {
   await db.query('rollback');
  }
  console.log(`PostgreSQL RLS: ${count} checks passed (A→B, B→A, anonymous, owner/status forgery, private notifications).`);
+ await checkTuition(db, config);
 } finally {await db.end();}
