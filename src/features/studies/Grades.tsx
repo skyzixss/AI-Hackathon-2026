@@ -1,38 +1,16 @@
 import { useCallback, useState } from "react";
 import type { Api } from "../../app/client.ts";
-import type { Grade } from "../../api/portal.ts";
 import { Icon } from "../../app/Icon.tsx";
 import { ResourceState, useResource } from "../../app/resource.tsx";
 import { dateLabel, moscowDay } from "./dates.ts";
+import { isDebt, gradeTone, numericAverage } from "./grade-model.ts";
+export { gradeTone, numericAverage } from "./grade-model.ts";
 
 const assessment = {
   exam: "Экзамен",
   credit: "Зачёт",
   coursework: "Курсовая работа",
 };
-export function gradeTone(result: string) {
-  if (/^(5|4|отлично|хорошо|зачтено|зачёт|зачет)$/i.test(result.trim()))
-    return "positive";
-  if (
-    /^(2|неудовлетворительно|не зачтено|незачёт|незачет)$/i.test(result.trim())
-  )
-    return "negative";
-  return "neutral";
-}
-export function numericAverage(grades: Grade[]) {
-  const values = grades
-    .map((grade) => grade.result.trim())
-    .filter((value) => /^[2-5]$/.test(value))
-    .map(Number);
-  return values.length
-    ? (
-        values.reduce((sum, value) => sum + value, 0) / values.length
-      ).toLocaleString("ru-RU", {
-        maximumFractionDigits: 1,
-        minimumFractionDigits: 1,
-      })
-    : "—";
-}
 export function Grades({
   api,
   sessionKey,
@@ -45,10 +23,13 @@ export function Grades({
   const load = useCallback(() => api.grades(), [api]);
   const { state, retry } = useResource(`${sessionKey}:grades`, load);
   const [semester, setSemester] = useState("all");
+  const [onlyDebts, setOnlyDebts] = useState(false);
   const grades = state.status === "ready" ? state.data : [];
   const filtered = grades.filter(
     (grade) => semester === "all" || String(grade.semester) === semester,
   );
+  const debts = filtered.filter(grade => isDebt(grade.result));
+  const visible = onlyDebts ? debts : filtered;
   return (
     <section className="panel grades-panel" aria-labelledby="grades-title">
       <div className="section-heading">
@@ -88,9 +69,15 @@ export function Grades({
                       : `за ${semester} семестр`}
                   </small>
                 </div>
+                <div className="debt-summary">
+                  <span>Долги за период</span>
+                  <strong className={debts.length ? "has-debts" : undefined}>{debts.length}</strong>
+                  <small>«2» или «Не зачтено»</small>
+                </div>
               </div>
               {!compact && (
                 <>
+                  <div className="grade-filters">
                   <label className="semester-select">
                     Период
                     <select
@@ -108,15 +95,19 @@ export function Grades({
                         ))}
                     </select>
                   </label>
+                  <button className="button secondary debt-filter" aria-pressed={onlyDebts} onClick={() => setOnlyDebts(value => !value)}>Только долги</button>
+                  </div>
+                  {onlyDebts && <p className="debt-explanation" role="status">{debts.length ? "Показаны неудовлетворительные результаты за выбранный период" : "Долгов за выбранный период нет"}</p>}
                   <ul className="grade-list">
-                    {filtered.map((grade) => (
-                      <li key={grade.id}>
+                    {visible.map((grade) => (
+                      <li key={grade.id} className={isDebt(grade.result) ? "grade-debt" : undefined}>
                         <div>
                           <span className="lesson-number">
                             {assessment[grade.assessment]} · {grade.semester}{" "}
                             семестр
                           </span>
                           <h3>{grade.subject}</h3>
+                          {isDebt(grade.result) && <p className="debt-label">Долг · нужно закрыть дисциплину</p>}
                           {grade.exam_at && (
                             <p className="muted small">
                               Сессия:{" "}
