@@ -81,7 +81,7 @@ export function App() {
   if (leaving)
     return (
       <main className="full-state" aria-live="polite">
-        <span className="brand-mark">к.</span>
+        <span className="brand-mark">К</span>
         <h1>
           {logoutError ? "Не удалось завершить сессию" : "Выходим из кабинета…"}
         </h1>
@@ -102,7 +102,7 @@ export function App() {
   if (auth.status !== "ready")
     return (
       <main className="full-state">
-        <span className="brand-mark">к.</span>
+        <span className="brand-mark">К</span>
         <h1>
           {auth.status === "error"
             ? "Не удалось проверить сессию"
@@ -174,6 +174,7 @@ function StudentPortal({ api, sessionKey, onSignOut }: {
   const active = navigation.find((item) => item.id === page)!;
   const profile = state.status === "ready" ? state.data : null;
   const today = moscowDay();
+  const firstName = profile?.full_name.trim().split(/\s+/)[0];
   const identity = <>
     <span className="avatar">{profile ? initials(profile.full_name) : "·"}</span>
     <span><strong>{profile?.full_name ?? "Личный кабинет"}</strong>
@@ -184,7 +185,6 @@ function StudentPortal({ api, sessionKey, onSignOut }: {
     {navigation.map(item => <a key={item.id} href={"#" + item.id}
       onClick={mobile ? closeMenu : undefined} aria-current={page === item.id ? "page" : undefined}>
       <Icon name={item.icon} /><span>{item.title}</span>
-      {page === item.id && <span className="nav-current" aria-hidden="true" />}
     </a>)}
   </nav>;
   return <div className="portal-layout">
@@ -192,7 +192,7 @@ function StudentPortal({ api, sessionKey, onSignOut }: {
       event.preventDefault(); document.getElementById("main-content")?.focus();
     }}>К содержимому</a>
     <aside className="sidebar">
-      <a className="brand" href="#home"><span className="brand-mark">к.</span>кампус</a>
+      <a className="brand" href="#home"><span className="brand-mark">К</span>кампус</a>
       {nav()}
       <div className="sidebar-bottom">
         <a className="student-identity" href="#profile">{identity}</a>
@@ -204,7 +204,7 @@ function StudentPortal({ api, sessionKey, onSignOut }: {
       onClick={event => { if (event.target === event.currentTarget) closeMenu(); }}>
       <div className="mobile-dialog-body">
         <div className="mobile-dialog-heading"><a className="brand" href="#home" onClick={closeMenu}>
-          <span className="brand-mark">к.</span>кампус</a>
+          <span className="brand-mark">К</span>кампус</a>
           <button className="icon-button" aria-label="Закрыть меню" onClick={closeMenu}><Icon name="close" /></button>
         </div>
         {nav(true)}
@@ -217,7 +217,7 @@ function StudentPortal({ api, sessionKey, onSignOut }: {
       <header className="topbar">
         <div className="page-heading">
           <p className="today-label">{dateLabel(today, { weekday: "long", day: "numeric", month: "long" })}</p>
-          <h1 ref={heading} tabIndex={-1}>{page === "home" ? "Твой учебный день" : active.title}</h1>
+          <h1 ref={heading} tabIndex={-1}>{page === "home" ? (firstName ? `Привет, ${firstName}` : "Привет") : active.title}</h1>
         </div>
         <div className="topbar-right">
           <ThemeToggle />

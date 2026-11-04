@@ -28,7 +28,7 @@ export function Login({ api, expired }: { api: Api | null; expired: boolean }) {
   }
   return (
     <main className="login-layout">
-      <header className="login-header"><a className="brand" href="#home"><span className="brand-mark">к.</span>кампус</a><ThemeToggle /></header>
+      <header className="login-header"><a className="brand" href="#home"><span className="brand-mark">К</span>кампус</a><ThemeToggle /></header>
       <section className="login-story">
         <span className="eyebrow">Личный кабинет студента</span>
         <h1>Твоя учёба —<br />в одном месте</h1>

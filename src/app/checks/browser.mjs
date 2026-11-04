@@ -209,7 +209,7 @@ try {
       .waitFor();
     checks++;
     await login();
-    await page.getByRole("heading", { name: "Твой учебный день" }).waitFor();
+    await page.getByRole("heading", { name: "Привет, Демо" }).waitFor();
     await page
       .getByText("Тестовые алгоритмы", { exact: true })
       .first()
@@ -290,7 +290,7 @@ try {
     await page.getByRole("button", { name: "Войти в кабинет" }).waitFor();
     checks++;
     await login("student-b@example.test");
-    await page.getByRole("heading", { name: "Твой учебный день" }).waitFor();
+    await page.getByRole("heading", { name: "Привет, Демо" }).waitFor();
     await page
       .getByText("Тестовая экономика", { exact: true })
       .first()
@@ -316,7 +316,7 @@ try {
     );
     const secondTab = await context.newPage();
     await secondTab.goto(process.env.PORTAL_URL || "http://127.0.0.1:5173");
-    await secondTab.getByRole("heading", { name: "Твой учебный день" }).waitFor();
+    await secondTab.getByRole("heading", { name: "Привет, Демо" }).waitFor();
     await logout(secondTab);
     await page.getByRole("button", { name: "Войти в кабинет" }).waitFor();
     await check(
@@ -325,7 +325,7 @@ try {
     await secondTab.close();
     await login("student-b@example.test");
     await navigate("home");
-    await page.getByRole("heading", { name: "Твой учебный день" }).waitFor();
+    await page.getByRole("heading", { name: "Привет, Демо" }).waitFor();
     emptySchedule = true;
     await navigate("schedule");
     await page.getByText("На этот день занятий нет").waitFor();
