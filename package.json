@@ -4,10 +4,13 @@
   "description": "Digital dean office: student portal",
   "scripts": {
     "check": "tsc --noEmit",
-    "test": "node --experimental-strip-types --test tests/*.test.ts",
+    "test": "node --experimental-strip-types --test tests/*.test.ts src/app/checks/errors.test.ts src/features/studies/dates.test.ts src/features/requests/model.test.ts",
     "test:db": "python3 scripts/test-db.py",
     "seed:demo": "node --env-file=.env --experimental-strip-types scripts/seed-demo.ts",
-    "test:live": "node --env-file=.env --experimental-strip-types scripts/verify-live.ts"
+    "test:live": "node --env-file=.env --experimental-strip-types scripts/verify-live.ts",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "repository": {
     "type": "git",

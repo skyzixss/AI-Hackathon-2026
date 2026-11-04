@@ -50,11 +50,14 @@ Security advisor: замечаний нет на момент подготовк
 
 ## Сайт
 
-Интерфейс и Vite entry создаёт Artem545111 (#6). React/Vite зависимости
-уже установлены. Рабочих команд dev/build пока нет — добавить в той же задаче,
-обычно `vite` и `vite build`. После появления dist/ проверить
-`npx wrangler deploy --dry-run`, затем отдельно разместить сайт.
-Хостинг подготовлен конфигурацией wrangler.jsonc, но публичной ссылки пока нет.
+Интерфейс Artem545111 и модули PUPSIK359 объединены для интеграции.
+`npm run dev` — Vite, `npm run build` — production сборка, `npm run preview` —
+просмотр сборки. Используются только VITE_SUPABASE_URL и
+VITE_SUPABASE_PUBLISHABLE_KEY из локальной .env; не добавлять VITE_ к secret key.
+
+Общий `npm test` запускает 12 unit-тестов, включая даты, ошибки доступа и
+модель заявок. Live-браузерные проверки и снимки — [integration.md](integration.md).
+`npx wrangler deploy --dry-run` прошёл; реальное размещение не выполнялось.
 
 ## Сохранённая облачная конфигурация Auth
 
@@ -92,7 +95,7 @@ refresh-токен должен получить HTTP 400 и error_code refresh_
 
 ## Автоматические проверки GitHub
 
-`.github/workflows/backend-checks.yml` запускает TypeScript, клиентские тесты
+`.github/workflows/backend-checks.yml` запускает TypeScript, клиентские тесты, сборку
 и те же 66 проверок RLS на новом PostgreSQL 17 в изолированной сети задания.
 Работает на pull_request и push в main; максимум 10 минут. Секреты Supabase,
 локальная .env и облачная база не используются. Docker-сервис удаляется

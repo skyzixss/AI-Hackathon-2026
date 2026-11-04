@@ -1,0 +1,36 @@
+{
+  "at": "2026-11-04T12:23:18.074Z",
+  "checks": 21,
+  "passed": [
+    "A: real schedule",
+    "A: profile",
+    "A: request persisted in UI after submit",
+    "A: request survives page reload",
+    "A: new server notification visible",
+    "A: notification read state persists",
+    "360px: requests no horizontal overflow",
+    "360px: submit request with keyboard",
+    "signout: A data hidden",
+    "360px: login no horizontal overflow",
+    "B: own schedule after switching account",
+    "B: neither A request is visible",
+    "B: own request submitted",
+    "B: real grades loaded",
+    "360px: grades no horizontal overflow",
+    "B: distinct real profile",
+    "360px: profile no horizontal overflow",
+    "A: own mobile request survives re-login",
+    "A: B request not visible",
+    "1440px: desktop no overflow",
+    "wrong password: visible error and no cabinet"
+  ],
+  "backend": "live Supabase demo",
+  "widths": [
+    360,
+    1440
+  ],
+  "limitations": [
+    "Offline simulation did not block Supabase requests; offline behavior not established by this run. Network settings restored.",
+    "Not deployed publicly."
+  ]
+}
