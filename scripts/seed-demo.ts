@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { randomBytes } from 'node:crypto';
+import { createDemoData } from './demo-data.ts';
 import { mkdir, writeFile } from 'node:fs/promises';
 const url = process.env.SUPABASE_URL;
 const key = process.env.SUPABASE_SECRET_KEY;
@@ -17,13 +18,14 @@ for (const [i,label] of ['a','b'].entries()) {
  // Save immediately: a partial failure must not lose the newly generated password.
  await mkdir('work',{recursive:true});
  await writeFile('work/demo-credentials.json',JSON.stringify(credentials,null,2),{mode:0o600});
- const profile=await admin.from('profiles').insert({student_id:id,full_name:`Тестовый Студент ${label.toUpperCase()}`,faculty:'Учебный факультет',program:i?'Экономика':'Информатика',course:i+1,group_name:`ДЕМО-${label.toUpperCase()}`});
+ const profile=await admin.from('profiles').insert({student_id:id,full_name:`Тестовый Студент ${label.toUpperCase()}`,faculty:'Учебный факультет',program:i?'Экономика':'Информатика',course:i+2,group_name:`ДЕМО-${label.toUpperCase()}`});
  if(profile.error) throw profile.error;
- const start=new Date(); start.setUTCHours(9+i*2,0,0,0);
+ const demo = createDemoData(id, i as 0 | 1);
  const seed=[
-  admin.from('schedule_entries').insert({student_id:id,subject:i?'Микроэкономика':'Алгоритмы',starts_at:start.toISOString(),ends_at:new Date(+start+5400000).toISOString(),room:`Демо-${101+i}`,teacher:`Вымышленный Преподаватель ${label.toUpperCase()}`,change_note:i?null:'Перенос в новую аудиторию'}),
-  admin.from('grades').insert({student_id:id,subject:i?'Микроэкономика':'Алгоритмы',assessment:'exam',result:i?'4':'5',semester:1,exam_at:new Date(+start+86400000*7).toISOString()}),
-  admin.from('notifications').insert({student_id:id,title:'Демонстрационные данные',body:'Это конкурсный концепт, не официальный сервис.'}),
+  admin.from('schedule_entries').insert(demo.schedule),
+  admin.from('grades').insert(demo.grades),
+  admin.from('requests').insert(demo.requests),
+  admin.from('notifications').insert(demo.notifications),
  ];
  for(const result of await Promise.all(seed)) if(result.error) throw result.error;
 }

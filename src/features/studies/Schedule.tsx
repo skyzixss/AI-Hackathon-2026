@@ -25,7 +25,7 @@ export function LessonList({
           <Icon name="calendar" size={28} />
         </span>
         <h3>На этот день занятий нет</h3>
-        <p>Можно выдохнуть или выбрать другой день.</p>
+        <p>Можно выдохнуть</p>
       </div>
     );
   return (

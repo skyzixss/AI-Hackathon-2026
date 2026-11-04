@@ -1,0 +1,74 @@
+[
+  {
+    "name": "Four lessons are shown today",
+    "passed": true
+  },
+  {
+    "name": "Short empty-state copy",
+    "passed": true
+  },
+  {
+    "name": "Nine grade results are shown",
+    "passed": true
+  },
+  {
+    "name": "Two debts are visibly marked",
+    "passed": true
+  },
+  {
+    "name": "Debt filter shows only two failed results",
+    "passed": true
+  },
+  {
+    "name": "Previous semester has a zero-debt state",
+    "passed": true
+  },
+  {
+    "name": "Changing semester restores its debts",
+    "passed": true
+  },
+  {
+    "name": "Route transitions are 280ms",
+    "passed": true
+  },
+  {
+    "name": "Grades fit 360px",
+    "passed": true
+  },
+  {
+    "name": "Week contains fourteen classes",
+    "passed": true
+  },
+  {
+    "name": "Both changes are shown",
+    "passed": true
+  },
+  {
+    "name": "Three historical request statuses are visible",
+    "passed": true
+  },
+  {
+    "name": "A new request appears alongside seeded examples",
+    "passed": true
+  },
+  {
+    "name": "Submitting a request creates its notification in preview",
+    "passed": true
+  },
+  {
+    "name": "Notification read feedback works",
+    "passed": true
+  },
+  {
+    "name": "B dashboard has no A debts",
+    "passed": true
+  },
+  {
+    "name": "B has no debts in grade filter",
+    "passed": true
+  },
+  {
+    "name": "B does not see A discipline results",
+    "passed": true
+  }
+]

@@ -4,7 +4,7 @@ import type { Api } from "./client.ts";
 import { ResourceState, useResource, type Resource } from "./resource.tsx";
 import { Icon } from "./Icon.tsx";
 import { featuredLesson } from "./dashboard-model.ts";
-import { numericAverage, gradeTone } from "../features/studies/Grades.tsx";
+import { numericAverage, gradeTone, isDebt } from "../features/studies/grade-model.ts";
 import { LessonList } from "../features/studies/Schedule.tsx";
 import { addDays, dateLabel, moscowDay, scheduleRange, timeLabel } from "../features/studies/dates.ts";
 
@@ -33,6 +33,7 @@ export function Dashboard({ api, sessionKey, profileState, retryProfile }: {
   const lessons = schedule.state.status === "ready" ? schedule.state.data : [];
   const featured = featuredLesson(lessons.filter(item => moscowDay(new Date(item.starts_at)) === today), now);
   const profile = profileState.status === "ready" ? profileState.data : null;
+  const debtCount = grades.state.status === "ready" ? grades.state.data.filter(item => isDebt(item.result)).length : 0;
   return <div className="dashboard-grid">
     <section className="lesson-hero" aria-label="Занятие на сегодня">
       <ResourceState {...schedule} />
@@ -56,6 +57,7 @@ export function Dashboard({ api, sessionKey, profileState, retryProfile }: {
         <strong className="academic-average">{numericAverage(grades.state.data)}</strong>
         <span>Средний балл</span>
         <p className="muted small">{grades.state.data.length ? `Результатов: ${grades.state.data.length} · все семестры` : "Оценок пока нет"}</p>
+        <p className={`small ${debtCount ? "debt-label" : "muted"}`}>{debtCount ? `Долгов: ${debtCount}` : "Долгов нет"}</p>
         <More href="#grades">Все результаты</More>
       </>}
     </section>
