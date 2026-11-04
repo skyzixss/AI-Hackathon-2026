@@ -1,0 +1,7 @@
+project_id = "student-portal-hackathon"
+[auth]
+enable_signup = false
+jwt_expiry = 300
+minimum_password_length = 12
+[auth.email]
+enabled = true

@@ -6,7 +6,8 @@
     "check": "tsc --noEmit",
     "test": "node --experimental-strip-types --test tests/*.test.ts",
     "test:db": "python3 scripts/test-db.py",
-    "seed:demo": "node --env-file=.env --experimental-strip-types scripts/seed-demo.ts"
+    "seed:demo": "node --env-file=.env --experimental-strip-types scripts/seed-demo.ts",
+    "test:live": "node --env-file=.env --experimental-strip-types scripts/verify-live.ts"
   },
   "repository": {
     "type": "git",
