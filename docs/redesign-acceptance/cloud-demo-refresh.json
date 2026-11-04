@@ -1,0 +1,30 @@
+{
+  "date": "2026-11-04",
+  "project": "jbzaqvutbybrhjctrexc",
+  "sourceCommit": "e188e36a1a12cdc81a3d6397c2ee37912bc4a42b",
+  "passed": true,
+  "before": {
+    "profiles": 2,
+    "schedule_entries": 2,
+    "grades": 2,
+    "requests": 14,
+    "notifications": 16
+  },
+  "after": {
+    "profiles": 2,
+    "schedule_entries": 30,
+    "grades": 20,
+    "requests": 18,
+    "notifications": 26
+  },
+  "checks": [
+    "Both demo accounts and profiles present",
+    "Existing rows and profiles unchanged",
+    "All generated examples present for both students",
+    "Repeat refresh creates no duplicates or changes",
+    "Local demo credentials unchanged"
+  ],
+  "limitations": [
+    "No data deleted; original schedule and grades remain alongside generated examples"
+  ]
+}
