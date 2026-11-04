@@ -1,0 +1,46 @@
+name: Backend checks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: backend-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    container: node:24-bookworm
+    services:
+      postgres:
+        image: postgres:17-bookworm
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_DB: postgres
+          POSTGRES_HOST_AUTH_METHOD: trust
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Install locked dependencies without lifecycle scripts
+        run: npm ci --ignore-scripts
+      - name: TypeScript
+        run: npm run check
+      - name: Client validation tests
+        run: npm test
+      - name: PostgreSQL access isolation
+        env:
+          # Hostname of the disposable service on the private job network.
+          # No host port, password, Supabase secret or existing database is used.
+          TEST_PG_SOCKET: postgres
+          TEST_PG_PORT: '5432'
+        run: node scripts/check-rls.mjs
