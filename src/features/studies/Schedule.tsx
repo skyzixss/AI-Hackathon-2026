@@ -43,7 +43,7 @@ export function LessonList({
             <i />
           </div>
           <div className="lesson-info">
-            <span className="lesson-number">ЗАНЯТИЕ {index + 1}</span>
+            <span className="lesson-number">Занятие {index + 1}</span>
             <h3>{lesson.subject}</h3>
             <p>
               <span>
@@ -97,7 +97,7 @@ export function Schedule({
     <section className="panel schedule-panel" aria-labelledby="schedule-title">
       <div className="section-heading">
         <div>
-          <span className="eyebrow">ТВОЙ УЧЕБНЫЙ РИТМ</span>
+          <span className="eyebrow">Занятия по московскому времени</span>
           <h2 id="schedule-title">
             {compact ? "Сегодня в расписании" : "Расписание"}
           </h2>

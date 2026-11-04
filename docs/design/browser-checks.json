@@ -1,0 +1,197 @@
+{
+  "checks": [
+    {
+      "name": "Escape closes mobile menu",
+      "passed": true
+    },
+    {
+      "name": "Focus returns to menu button",
+      "passed": true
+    },
+    {
+      "name": "Navigation closes modal",
+      "passed": true
+    },
+    {
+      "name": "Mobile schedule has no overflow",
+      "passed": true
+    },
+    {
+      "name": "Weekly schedule contains seven days",
+      "passed": true
+    },
+    {
+      "name": "Changing week removes old lessons",
+      "passed": true
+    },
+    {
+      "name": "Grades filter works",
+      "passed": true
+    },
+    {
+      "name": "Mobile grades have no overflow",
+      "passed": true
+    },
+    {
+      "name": "Empty request has validation",
+      "passed": true
+    },
+    {
+      "name": "Template fills request",
+      "passed": true
+    },
+    {
+      "name": "Failed write does not show success",
+      "passed": true
+    },
+    {
+      "name": "Failed write keeps request text",
+      "passed": true
+    },
+    {
+      "name": "Failed write leaves list empty",
+      "passed": true
+    },
+    {
+      "name": "Mobile request page has no overflow",
+      "passed": true
+    },
+    {
+      "name": "Confirmed request appears in list",
+      "passed": true
+    },
+    {
+      "name": "New request status is submitted",
+      "passed": true
+    },
+    {
+      "name": "Request survives reload",
+      "passed": true
+    },
+    {
+      "name": "Notification read survives reload",
+      "passed": true
+    },
+    {
+      "name": "Mobile notifications have no overflow",
+      "passed": true
+    },
+    {
+      "name": "All six sections are reachable on mobile",
+      "passed": true
+    },
+    {
+      "name": "Logout removes private student screens",
+      "passed": true
+    },
+    {
+      "name": "Incorrect credentials remain on login with error",
+      "passed": true
+    },
+    {
+      "name": "Student B sees own grade",
+      "passed": true
+    },
+    {
+      "name": "Student A data are not visible after switching account",
+      "passed": true
+    },
+    {
+      "name": "B dashboard does not show A request",
+      "passed": true
+    },
+    {
+      "name": "Dark theme survives logout and new login",
+      "passed": true
+    },
+    {
+      "name": "Mobile dashboard has no overflow",
+      "passed": true
+    },
+    {
+      "name": "Student B profile has own group",
+      "passed": true
+    },
+    {
+      "name": "Mobile profile has no overflow",
+      "passed": true
+    },
+    {
+      "name": "Student B request list excludes student A request",
+      "passed": true
+    },
+    {
+      "name": "Dark mobile theme persists after new session",
+      "passed": true
+    }
+  ],
+  "darkContrast": [
+    {
+      "pair": "text/surface",
+      "ratio": 15.29
+    },
+    {
+      "pair": "muted/surface",
+      "ratio": 8.54
+    },
+    {
+      "pair": "accent/surface",
+      "ratio": 9.23
+    },
+    {
+      "pair": "accent-ink/accent",
+      "ratio": 9.31
+    },
+    {
+      "pair": "hero-ink/hero-bg",
+      "ratio": 8.73
+    },
+    {
+      "pair": "positive/positive-bg",
+      "ratio": 7.64
+    },
+    {
+      "pair": "negative/negative-bg",
+      "ratio": 7.43
+    },
+    {
+      "pair": "warning/warning-bg",
+      "ratio": 7.83
+    }
+  ],
+  "lightContrast": [
+    {
+      "pair": "text/surface",
+      "ratio": 15.89
+    },
+    {
+      "pair": "muted/surface",
+      "ratio": 6.34
+    },
+    {
+      "pair": "accent/surface",
+      "ratio": 6.48
+    },
+    {
+      "pair": "accent-ink/accent",
+      "ratio": 6.48
+    },
+    {
+      "pair": "hero-ink/hero-bg",
+      "ratio": 9.78
+    },
+    {
+      "pair": "positive/positive-bg",
+      "ratio": 5.78
+    },
+    {
+      "pair": "negative/negative-bg",
+      "ratio": 5.59
+    },
+    {
+      "pair": "warning/warning-bg",
+      "ratio": 5.93
+    }
+  ],
+  "console": []
+}

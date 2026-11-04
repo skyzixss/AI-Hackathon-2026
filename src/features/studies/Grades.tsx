@@ -53,7 +53,7 @@ export function Grades({
     <section className="panel grades-panel" aria-labelledby="grades-title">
       <div className="section-heading">
         <div>
-          <span className="eyebrow">ШАГ ЗА ШАГОМ</span>
+          <span className="eyebrow">Результаты по дисциплинам</span>
           <h2 id="grades-title">
             {compact ? "Учёба в цифрах" : "Успеваемость"}
           </h2>
@@ -114,7 +114,7 @@ export function Grades({
                         <div>
                           <span className="lesson-number">
                             {assessment[grade.assessment]} · {grade.semester}{" "}
-                            СЕМЕСТР
+                            семестр
                           </span>
                           <h3>{grade.subject}</h3>
                           {grade.exam_at && (
