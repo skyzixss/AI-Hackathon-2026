@@ -8,6 +8,7 @@
     "test:db": "python3 scripts/test-db.py",
     "seed:demo": "node --env-file=.env --experimental-strip-types scripts/seed-demo.ts",
     "test:live": "node --env-file=.env --experimental-strip-types scripts/verify-live.ts",
+    "test:tuition:live": "node --env-file=.env --experimental-strip-types scripts/verify-tuition-live.ts",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"

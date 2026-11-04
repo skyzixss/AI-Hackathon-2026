@@ -1,0 +1,10 @@
+{
+  "project": "jbzaqvutbybrhjctrexc",
+  "passed": true,
+  "checks": 38,
+  "at": "2026-11-04T20:07:52.627Z",
+  "limitations": [
+    "Not a browser test",
+    "Temporary invoices only; seeded demonstration balances preserved"
+  ]
+}
