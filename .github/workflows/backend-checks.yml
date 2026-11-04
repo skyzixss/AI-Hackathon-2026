@@ -37,6 +37,8 @@ jobs:
         run: npm run check
       - name: Client validation tests
         run: npm test
+      - name: Production build
+        run: npm run build
       - name: PostgreSQL access isolation
         env:
           # Hostname of the disposable service on the private job network.
