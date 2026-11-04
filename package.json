@@ -1,0 +1,35 @@
+{
+  "name": "student-portal",
+  "version": "1.0.0",
+  "description": "Digital dean office: student portal",
+  "scripts": {
+    "check": "tsc --noEmit",
+    "test": "node --experimental-strip-types --test tests/*.test.ts",
+    "test:db": "python3 scripts/test-db.py",
+    "seed:demo": "node --env-file=.env --experimental-strip-types scripts/seed-demo.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skyzixss/AI-Hackathon-2026.git"
+  },
+  "license": "UNLICENSED",
+  "type": "module",
+  "dependencies": {
+    "@supabase/supabase-js": "2.118.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.6",
+    "@types/pg": "8.23.1",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "6.2.1",
+    "pg": "8.23.1",
+    "supabase": "3.0.0",
+    "typescript": "7.0.2",
+    "vite": "8.3.5",
+    "wrangler": "4.157.0"
+  },
+  "private": true
+}
