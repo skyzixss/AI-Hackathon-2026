@@ -1,0 +1,72 @@
+/* Scoped (pr-*) styles for requests and notifications. Colors fall back to
+   local values until the shared theme from src/styles/ (Artem545111) exists. */
+.pr-panel {
+  --pr-fg: var(--color-text, #1c1f24);
+  --pr-muted: var(--color-muted, #5b6270);
+  --pr-bg: var(--color-surface, #ffffff);
+  --pr-line: var(--color-border, #d9dde3);
+  --pr-accent: var(--color-accent, #1f5fbf);
+  --pr-ok: #1d7a43;
+  --pr-bad: #b42318;
+  --pr-warn: #8a5a00;
+  color: var(--pr-fg);
+  display: grid;
+  gap: 12px;
+  max-width: 720px;
+}
+@media (prefers-color-scheme: dark) {
+  .pr-panel {
+    --pr-fg: var(--color-text, #eef0f3);
+    --pr-muted: var(--color-muted, #a5adba);
+    --pr-bg: var(--color-surface, #1b1e23);
+    --pr-line: var(--color-border, #3a3f47);
+    --pr-accent: var(--color-accent, #7fb0ff);
+    --pr-ok: #6fd39a;
+    --pr-bad: #ff8a80;
+    --pr-warn: #f0c060;
+  }
+}
+.pr-panel h2, .pr-panel h3 { margin: 0; }
+.pr-panel h2 { font-size: 1.25rem; display: flex; align-items: center; gap: 8px; }
+.pr-panel h3 { font-size: 1rem; margin-top: 8px; }
+.pr-panel button, .pr-panel select, .pr-panel textarea { font: inherit; }
+.pr-panel button {
+  min-height: 44px; padding: 0 14px; border-radius: 8px;
+  border: 1px solid var(--pr-line); background: var(--pr-bg); color: var(--pr-fg); cursor: pointer;
+}
+.pr-panel button:disabled { opacity: .6; cursor: not-allowed; }
+.pr-panel :focus-visible { outline: 3px solid var(--pr-accent); outline-offset: 2px; }
+.pr-form { display: grid; gap: 6px; padding: 12px; border: 1px solid var(--pr-line); border-radius: 12px; background: var(--pr-bg); }
+.pr-form label { font-weight: 600; margin-top: 6px; }
+.pr-form select, .pr-form textarea {
+  width: 100%; box-sizing: border-box; padding: 10px; border-radius: 8px;
+  border: 1px solid var(--pr-line); background: var(--pr-bg); color: var(--pr-fg);
+}
+.pr-form select { min-height: 44px; }
+.pr-form textarea { resize: vertical; min-height: 96px; }
+.pr-templates { border: 0; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.pr-templates legend { font-weight: 600; padding: 0; margin-bottom: 6px; }
+.pr-panel .pr-chip { min-height: 36px; border-radius: 999px; font-size: .9rem; }
+.pr-panel .pr-primary { background: var(--pr-accent); border-color: var(--pr-accent); color: #fff; font-weight: 600; }
+@media (prefers-color-scheme: dark) { .pr-panel .pr-primary { color: #0d1117; } }
+.pr-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.pr-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.pr-card { border: 1px solid var(--pr-line); border-radius: 12px; padding: 12px; background: var(--pr-bg); display: grid; gap: 6px; }
+.pr-unread { border-left: 4px solid var(--pr-accent); }
+.pr-read { opacity: .85; }
+.pr-card-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+.pr-body { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.pr-kind { font-weight: 600; }
+.pr-status { font-size: .85rem; padding: 2px 10px; border-radius: 999px; border: 1px solid currentColor; }
+.pr-status-submitted { color: var(--pr-accent); }
+.pr-status-in_review { color: var(--pr-warn); }
+.pr-status-ready { color: var(--pr-ok); }
+.pr-status-rejected { color: var(--pr-bad); }
+.pr-muted, .pr-note { color: var(--pr-muted); font-size: .875rem; margin: 0; }
+.pr-empty { margin: 0; padding: 16px; border: 1px dashed var(--pr-line); border-radius: 12px; color: var(--pr-muted); }
+.pr-alert { padding: 10px 12px; border-radius: 8px; border: 1px solid var(--pr-bad); color: var(--pr-bad); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.pr-error { color: var(--pr-bad); margin: 0; min-height: 1.2em; }
+.pr-success { color: var(--pr-ok); margin: 0; min-height: 1.2em; }
+.pr-over { color: var(--pr-bad); font-size: .875rem; }
+.pr-badge { background: var(--pr-accent); color: #fff; border-radius: 999px; font-size: .8rem; padding: 1px 8px; }
+.pr-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--pr-accent); flex: none; }
