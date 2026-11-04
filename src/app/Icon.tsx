@@ -1,12 +1,12 @@
 import type { CSSProperties } from "react";
 
-// Original Tabler SVG files, vendored with their MIT license in styles/icons.
+// Tabler SVGs (MIT) plus the project's original tuition-card in styles/icons.
 const icons = import.meta.glob<string>("../styles/icons/*.svg", {
   eager: true, query: "?url", import: "default",
 });
 const names = {
   home: "home", calendar: "calendar", grades: "chart-bar",
-  document: "file-description", bell: "bell", user: "user",
+  document: "file-description", bell: "bell", user: "user", payment: "tuition-card",
   arrow: "arrow-right", logout: "logout", check: "check", clock: "clock",
   pin: "map-pin", chevron: "chevron-right", sun: "sun", moon: "moon",
   menu: "menu-2", close: "x", school: "school", group: "stack-2", laptop: "device-laptop",

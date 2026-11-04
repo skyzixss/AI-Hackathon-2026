@@ -1,0 +1,63 @@
+.tuition-page { display: grid; gap: 20px; }
+.tuition-demo-note { display: flex; align-items: center; gap: 10px; color: var(--color-muted); font-size: 14px; }
+.tuition-overview { display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px; }
+.tuition-next { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; padding: 28px 32px; color: var(--hero-ink); background: var(--hero-bg); border-radius: 20px; }
+.tuition-kicker { font-size: 14px; font-weight: 600; }
+.tuition-next .tuition-amount { font-size: clamp(40px, 4.7vw, 64px); line-height: 1.1; font-variant-numeric: tabular-nums; letter-spacing: -.04em; }
+.tuition-purpose { font-size: 16px; }
+.tuition-due, .tuition-paid-mark { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+.tuition-next > .button, .tuition-paid-mark { margin-top: auto; }
+.tuition-next > .button { margin-top: 12px; }
+.tuition-paid-mark { padding-top: 16px; }
+.tuition-balance h2 { font-size: 20px; }
+.tuition-balance dl { margin: 24px 0; display: grid; gap: 16px; }
+.tuition-balance dl > div { display: flex; gap: 16px; align-items: baseline; justify-content: space-between; }
+.tuition-balance dt { color: var(--color-muted); font-size: 14px; }
+.tuition-balance dd { margin: 0; font-size: 24px; font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; }
+.tuition-balance dd.tuition-contract { font-size: 14px; overflow-wrap: anywhere; }
+.tuition-overdue { display: flex; gap: 8px; color: var(--negative); margin-bottom: 12px; font-size: 14px; }
+.tuition-schedule, .tuition-history { display: grid; }
+.tuition-charge { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto 132px; gap: 16px; align-items: center; padding: 20px 0; border-top: 1px solid var(--color-border); }
+.tuition-charge-icon { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; color: var(--color-accent); background: var(--accent-soft); }
+.tuition-charge.is-paid .tuition-charge-icon { color: var(--positive); background: var(--positive-bg); }
+.tuition-charge-copy p, .tuition-history p { color: var(--color-muted); font-size: 13px; margin-top: 4px; overflow-wrap: anywhere; }
+.tuition-charge-amount, .tuition-history strong { white-space: nowrap; font-variant-numeric: tabular-nums; font-size: 20px; }
+.tuition-charge .button { padding: 8px 12px; }
+.tuition-charge .tuition-status-paid { justify-self: end; color: var(--positive); background: var(--positive-bg); }
+.tuition-history li { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; gap: 16px; align-items: center; padding: 20px 0; border-top: 1px solid var(--color-border); }
+.tuition-success { display: flex; gap: 16px; align-items: flex-start; background: var(--positive-bg); color: var(--positive); border: 1px solid var(--positive); border-radius: 16px; padding: 20px; }
+.tuition-success p { margin-top: 4px; }
+.tuition-success small { display: block; margin-top: 8px; overflow-wrap: anywhere; }
+.tuition-dialog { padding: 0; width: min(500px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); border: 1px solid var(--color-border); border-radius: 20px; background: var(--color-surface); color: var(--color-text); }
+.tuition-dialog::backdrop { background: #050b15b8; backdrop-filter: blur(4px); }
+.tuition-dialog[open] { animation: enter-page 280ms ease-out both; }
+.tuition-dialog-body { padding: 28px; }
+.tuition-dialog .section-heading { margin-bottom: 16px; }
+.tuition-dialog-amount { font-size: 40px; font-weight: 600; color: var(--color-accent); margin: 20px 0 12px; font-variant-numeric: tabular-nums; }
+.tuition-dialog-note { margin-top: 24px; color: var(--color-muted); font-size: 14px; }
+.tuition-dialog-actions { display: grid; gap: 12px; margin-top: 24px; }
+.student-identity[aria-current='page'] { border-color: var(--color-accent); }
+@media (max-width: 1100px) {
+  .tuition-overview { grid-template-columns: 1fr; }
+  .tuition-charge { grid-template-columns: 44px minmax(0, 1fr) auto; }
+  .tuition-charge > .button, .tuition-status-paid { grid-column: 2 / -1; justify-self: start; }
+}
+@media (max-width: 640px) {
+  .tuition-page { gap: 16px; }
+  .tuition-demo-note { align-items: flex-start; font-size: 12px; }
+  .tuition-demo-note .icon { margin-top: 1px; }
+  .tuition-overview { gap: 16px; }
+  .tuition-next { border-radius: 16px; padding: 24px; }
+  .tuition-next .tuition-amount { font-size: 44px; }
+  .tuition-next > .button { width: 100%; justify-content: space-between; }
+  .tuition-charge { grid-template-columns: 36px minmax(0, 1fr); gap: 12px; padding: 20px 0; }
+  .tuition-charge-icon { width: 36px; height: 36px; border-radius: 10px; }
+  .tuition-charge-amount { grid-column: 2; }
+  .tuition-charge > .button, .tuition-status-paid { grid-column: 2; }
+  .tuition-history li { grid-template-columns: 36px minmax(0, 1fr); gap: 12px; }
+  .tuition-history strong { grid-column: 2; }
+  .tuition-dialog-body { padding: 20px; }
+  .tuition-dialog h2 { font-size: 24px; }
+  .tuition-dialog-amount { font-size: 36px; }
+  .tuition-balance dd { font-size: 22px; }
+}

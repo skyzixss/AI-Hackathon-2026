@@ -11,6 +11,8 @@ import { Icon } from "./Icon.tsx";
 import { RequestsPanel, NotificationsPanel } from "./extensions.tsx";
 import { ThemeToggle } from "./ThemeToggle.tsx";
 import { Dashboard } from "./Dashboard.tsx";
+import { Tuition } from "../features/payments/Tuition.tsx";
+import type { TuitionApi } from "../features/payments/api.ts";
 
 const navigation = [
   { id: "home", title: "Главная", icon: "home" },
@@ -18,12 +20,13 @@ const navigation = [
   { id: "grades", title: "Успеваемость", icon: "grades" },
   { id: "requests", title: "Справки и заявки", icon: "document" },
   { id: "notifications", title: "Уведомления", icon: "bell" },
-  { id: "profile", title: "Мой профиль", icon: "user" },
+  { id: "payments", title: "Оплата обучения", icon: "payment" },
 ] as const;
-type Page = (typeof navigation)[number]["id"];
+const pages = [...navigation, { id: "profile", title: "Мой профиль" }] as const;
+type Page = (typeof pages)[number]["id"];
 function currentPage(): Page {
   const hash = window.location.hash.slice(1);
-  return navigation.find((item) => item.id === hash)?.id ?? "home";
+  return pages.find((item) => item.id === hash)?.id ?? "home";
 }
 type Auth =
   | { status: "checking" }
@@ -130,14 +133,15 @@ export function App() {
     <StudentPortal
       key={auth.session.user.id}
       api={connection.api}
+      tuitionApi={connection.tuitionApi}
       sessionKey={auth.session.user.id}
       onSignOut={signOut}
     />
   );
 }
 
-function StudentPortal({ api, sessionKey, onSignOut }: {
-  api: Api; sessionKey: string; onSignOut: () => void;
+function StudentPortal({ api, tuitionApi, sessionKey, onSignOut }: {
+  api: Api; tuitionApi: TuitionApi; sessionKey: string; onSignOut: () => void;
 }) {
   const [page, setPage] = useState<Page>(currentPage);
   const [notificationsRevision, setNotificationsRevision] = useState(0);
@@ -171,7 +175,7 @@ function StudentPortal({ api, sessionKey, onSignOut }: {
     menu.current?.close();
   }, [menuOpen]);
   const closeMenu = () => { menu.current?.close(); setMenuOpen(false); };
-  const active = navigation.find((item) => item.id === page)!;
+  const active = pages.find((item) => item.id === page)!;
   const profile = state.status === "ready" ? state.data : null;
   const today = moscowDay();
   const firstName = profile?.full_name.trim().split(/\s+/)[0];
@@ -195,7 +199,7 @@ function StudentPortal({ api, sessionKey, onSignOut }: {
       <a className="brand" href="#home"><span className="brand-mark">К</span>кампус</a>
       {nav()}
       <div className="sidebar-bottom">
-        <a className="student-identity" href="#profile">{identity}</a>
+        <a className="student-identity" href="#profile" aria-label="Мой профиль" aria-current={page === "profile" ? "page" : undefined}>{identity}</a>
         <button className="logout" onClick={onSignOut}><Icon name="logout" />Выйти из кабинета</button>
       </div>
     </aside>
@@ -208,7 +212,7 @@ function StudentPortal({ api, sessionKey, onSignOut }: {
           <button className="icon-button" aria-label="Закрыть меню" onClick={closeMenu}><Icon name="close" /></button>
         </div>
         {nav(true)}
-        <a className="student-identity" href="#profile" onClick={closeMenu}>{identity}</a>
+        <a className="student-identity" href="#profile" aria-label="Мой профиль" aria-current={page === "profile" ? "page" : undefined} onClick={closeMenu}>{identity}</a>
         <button className="logout" onClick={() => { closeMenu(); onSignOut(); }}><Icon name="logout" />Выйти из кабинета</button>
         <p className="small muted">Конкурсный концепт · Не официальный сервис вуза</p>
       </div>
@@ -232,6 +236,7 @@ function StudentPortal({ api, sessionKey, onSignOut }: {
           {page === "home" && <Dashboard api={api} sessionKey={sessionKey} profileState={state} retryProfile={retry} />}
           {page === "schedule" && <Schedule api={api} sessionKey={sessionKey} />}
           {page === "grades" && <Grades api={api} sessionKey={sessionKey} />}
+          {page === "payments" && <Tuition api={tuitionApi} sessionKey={sessionKey} />}
           {page === "profile" && <><ResourceState state={state} retry={retry} />{profile && <ProfilePanel profile={profile} />}</>}
           {page === "requests" && (RequestsPanel ? <RequestsPanel api={api} sessionKey={sessionKey}
             onSubmitted={() => setNotificationsRevision(n => n + 1)} /> : <PendingIntegration />)}

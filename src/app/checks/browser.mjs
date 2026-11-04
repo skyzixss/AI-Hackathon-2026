@@ -192,8 +192,8 @@ try {
     async function navigate(hash) {
       if (width === 360) {
         await page.getByRole("button", { name: "Открыть меню", exact: true }).click();
-        await page.locator(`dialog nav a[href="#${hash}"]`).click();
-      } else await page.locator(`.sidebar nav a[href="#${hash}"]`).click();
+        await page.locator(hash === "profile" ? "dialog .student-identity" : `dialog nav a[href="#${hash}"]`).click();
+      } else await page.locator(hash === "profile" ? ".sidebar .student-identity" : `.sidebar nav a[href="#${hash}"]`).click();
     }
     async function logout(target = page) {
       if (width === 360) {
