@@ -22,7 +22,7 @@ export function RequestsPanel({ api, sessionKey, onSubmitted }: RequestsPanelPro
       <RequestForm
         key={sessionKey}
         api={api}
-        onCreated={(r) => { update((list) => [r, ...list]); onSubmitted?.(r); }}
+        onCreated={(r) => { update((list) => list.some(item => item.id === r.id) ? list : [r, ...list]); onSubmitted?.(r); }}
       />
       <h3>Мои заявки</h3>
       {state.status === 'loading' && <p className="pr-muted" role="status">Загружаем заявки…</p>}
