@@ -1,0 +1,10 @@
+{
+  "source": "bfc6cdf + working-tree useLoad fix (retained data on retry, cleared on session change)",
+  "environment": "Actual browser UI and isolated local HTTP fixtures; persistent 503",
+  "checks": [
+    "Подтверждённая заявка видна при повторном чтении и после повторного отказа GET",
+    "Второй последовательный повтор с отказом также сохраняет запись"
+  ],
+  "accountChange": "Verified by regression harness, not this browser run",
+  "useLoadSha256": "506e0c095ebc29dfe51ba5ad9a3f99d11539d2c4cc34586690b69e55d28a8c7b"
+}

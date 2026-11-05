@@ -1,3 +1,4 @@
+import { useMoscowDay } from "../features/studies/useMoscowDay.ts";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
 import { connection, type Api } from "./client.ts";
@@ -177,7 +178,7 @@ function StudentPortal({ api, tuitionApi, sessionKey, onSignOut }: {
   const closeMenu = () => { menu.current?.close(); setMenuOpen(false); };
   const active = pages.find((item) => item.id === page)!;
   const profile = state.status === "ready" ? state.data : null;
-  const today = moscowDay();
+  const today = useMoscowDay();
   const firstName = profile?.full_name.trim().split(/\s+/)[0];
   const identity = <>
     <span className="avatar">{profile ? initials(profile.full_name) : "·"}</span>

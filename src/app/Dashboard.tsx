@@ -1,3 +1,4 @@
+import { useMoscowDay } from "../features/studies/useMoscowDay.ts";
 import { useCallback, useEffect, useState } from "react";
 import type { Profile } from "../api/portal.ts";
 import type { Api } from "./client.ts";
@@ -20,7 +21,7 @@ export function Dashboard({ api, sessionKey, profileState, retryProfile }: {
     const timer = window.setInterval(() => setNow(Date.now()), 60000);
     return () => window.clearInterval(timer);
   }, []);
-  const today = moscowDay(new Date(now));
+  const today = useMoscowDay();
   const [selected, setSelected] = useState<string | null>(null);
   const range = scheduleRange(today, "week");
   const day = selected && selected >= range.start && selected < addDays(range.start, 7) ? selected : today;
