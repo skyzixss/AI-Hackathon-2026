@@ -1,0 +1,21 @@
+{
+  "productSource": "b0ed35e5eea15939c2dd6521e4224d65da86d5db",
+  "seedSource": "b2a7eda",
+  "origin": "https://student-portal-hackathon.ankajournal-cloudflare.workers.dev",
+  "environment": "Real HTTPS UI and Supabase, no fixtures",
+  "checks": [
+    "A: конкретный срок 8 ноября 18:00 МСК и заявление о теме проекта видны",
+    "A: уведомление явно маркировано как вымышленное",
+    "A: напоминания B о практике нет",
+    "A: напоминание сохраняется после reload и показано ровно один раз",
+    "B: виден свой срок и заявление о месте практики",
+    "B: напоминания A о теме проекта нет",
+    "360px: напоминание B читается без горизонтального переполнения",
+    "B: после reload напоминание сохраняется без дубля"
+  ],
+  "readMarkersChanged": false,
+  "notes": [
+    "No frontend deployment or schema migration.",
+    "Fictional reminder due 8 November 2026 at 18:00 Moscow; not an official university deadline."
+  ]
+}

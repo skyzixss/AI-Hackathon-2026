@@ -4,9 +4,9 @@ import http from "node:http";
 import { spawn } from "node:child_process";
 
 const root = new URL("../", import.meta.url);
-function run(url = "", allow = "yes") {
+function run(url = "", allow = "yes", args: string[] = []) {
   return new Promise<{ code: number | null; output: string }>((resolve, reject) => {
-    const child = spawn(process.execPath, ["--experimental-strip-types", "scripts/refresh-demo.ts"], {
+    const child = spawn(process.execPath, ["--experimental-strip-types", "scripts/refresh-demo.ts", ...args], {
       cwd: root, env: { ...process.env, SUPABASE_URL: url, SUPABASE_SECRET_KEY: "fixture-only-secret", PORTAL_ALLOW_DEMO_SEED: allow },
     });
     let output = "";
@@ -49,16 +49,29 @@ test("demo refresh preserves identities and state when repeated; missing profile
     assert.equal(rows.get("schedule_entries")?.size, 28);
     assert.equal(rows.get("grades")?.size, 18);
     assert.equal(rows.get("requests")?.size, 4);
-    assert.equal(rows.get("notifications")?.size, 6);
+    assert.equal(rows.get("notifications")?.size, 8);
     const request = [...rows.get("requests")!.values()][0]; request.status = "in_review";
     const notification = [...rows.get("notifications")!.values()][0]; notification.read_at = "2026-11-04T12:00:00Z";
     const second = await run(url); assert.equal(second.code, 0, second.output);
     assert.equal(rows.get("schedule_entries")?.size, 28);
     assert.equal(rows.get("requests")!.get(String(request.id))!.status, "in_review");
     assert.equal(rows.get("notifications")!.get(String(notification.id))!.read_at, "2026-11-04T12:00:00Z");
+    // A reminders-only refresh must never touch schedule/grades/requests.
+    rows.clear(); writes = 0;
+    const reminders = await run(url, "yes", ["--reminders-only"]); assert.equal(reminders.code, 0, reminders.output);
+    assert.deepEqual([...rows.keys()], ["notifications"]);
+    assert.equal(rows.get("notifications")?.size, 2);
+    const reminder = [...rows.get("notifications")!.values()][0]; reminder.read_at = "2026-11-05T12:00:00Z";
+    assert.equal((await run(url, "yes", ["--reminders-only"])).code, 0);
+    assert.equal(rows.get("notifications")?.size, 2);
+    assert.equal(rows.get("notifications")!.get(String(reminder.id))!.read_at, "2026-11-05T12:00:00Z");
     incomplete = true;
     const before = writes;
     assert.notEqual((await run(url)).code, 0);
+    assert.equal(writes, before);
+    assert.notEqual((await run(url, "yes", ["--reminders-only"])).code, 0);
+    assert.equal(writes, before);
+    assert.notEqual((await run(url, "yes", ["--unknown"])).code, 0);
     assert.equal(writes, before);
   } finally { await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve())); }
 });

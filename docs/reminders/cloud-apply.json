@@ -1,0 +1,14 @@
+{
+  "project": "jbzaqvutbybrhjctrexc",
+  "source": "b2a7eda",
+  "mode": "--reminders-only",
+  "appliedAt": "2026-11-05T18:23:17.840Z",
+  "checks": [
+    "profiles: unchanged",
+    "schedule_entries: unchanged",
+    "grades: unchanged",
+    "requests: unchanged",
+    "Exactly two reminders added, one per A/B; old notification rows and read markers unchanged",
+    "tuition_charges: unchanged"
+  ]
+}

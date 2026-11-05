@@ -1,0 +1,11 @@
+{
+  "project": "jbzaqvutbybrhjctrexc",
+  "source": "b2a7eda",
+  "method": "Real user-JWT Data API queries by own/other notification IDs; no UI filtering",
+  "checks": [
+    "A reads own reminder by exact ID",
+    "A cannot read other reminder by exact ID",
+    "B reads own reminder by exact ID",
+    "B cannot read other reminder by exact ID"
+  ]
+}

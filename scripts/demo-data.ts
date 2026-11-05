@@ -3,18 +3,34 @@ import { createHash } from "node:crypto";
 import type { Grade, Lesson, Notification, StudentRequest } from "../src/api/portal.ts";
 import { addDays, moscowDay, weekStart } from "../src/features/studies/dates.ts";
 
+function demoId(studentId: string, name: string) {
+  const bytes = createHash("sha256").update(`campus-demo-v1:${studentId}:${name}`).digest().subarray(0, 16);
+  bytes[6] = (bytes[6] & 15) | 128;
+  bytes[8] = (bytes[8] & 63) | 128;
+  const hex = bytes.toString("hex");
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+}
+
+/** A fictional dean's announcement, not a real university deadline or scheduler. */
+export function createDeadlineReminder(studentId: string, variant: 0 | 1, now = new Date()): Notification {
+  const today = moscowDay(now);
+  const due = addDays(today, 3);
+  const date = new Intl.DateTimeFormat("ru-RU", { timeZone: "Europe/Moscow", day: "numeric", month: "long", year: "numeric" }).format(new Date(`${due}T18:00:00+03:00`));
+  const action = variant ? "подайте заявление о месте учебной практики" : "подайте заявление о выборе темы учебного проекта";
+  return {
+    id: demoId(studentId, `deadline:${due}`), student_id: studentId,
+    title: "Напоминание о сроке подачи заявления",
+    body: `До ${date}, 18:00 (МСК) ${action}. Раздел «Справки и заявки» → тип «Заявление». Это вымышленный учебный срок для демонстрации, не правило реального вуза.`,
+    created_at: now.toISOString(), read_at: null,
+  };
+}
+
 export function createDemoData(studentId: string, variant: 0 | 1, now = new Date()) {
   const today = moscowDay(now);
   const monday = weekStart(today);
   const at = (day: string, time: string) => new Date(`${day}T${time}:00+03:00`).toISOString();
   // Stable IDs make refresh safe to repeat. Account IDs scope every entity.
-  const id = (name: string) => {
-    const bytes = createHash("sha256").update(`campus-demo-v1:${studentId}:${name}`).digest().subarray(0, 16);
-    bytes[6] = (bytes[6] & 15) | 128;
-    bytes[8] = (bytes[8] & 63) | 128;
-    const hex = bytes.toString("hex");
-    return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
-  };
+  const id = (name: string) => demoId(studentId, name);
   const subjects = variant ? ["Микроэкономика", "Статистика", "Бухгалтерский учёт", "Деловой английский", "Финансовый анализ", "Учебный проект"] :
     ["Математический анализ", "Алгоритмы и структуры данных", "Базы данных", "Иностранный язык", "Компьютерные сети", "Учебный проект"];
   const slots: [number, string, string, number, string?][] = [
@@ -58,6 +74,7 @@ export function createDemoData(studentId: string, variant: 0 | 1, now = new Date
     created_at: at(addDays(today, -1 - index), "12:00"),
   }));
   const notifications: Notification[] = [
+    createDeadlineReminder(studentId, variant, now),
     { id: id("news:room"), student_id: studentId, title: "Изменение аудитории", body: `${subjects[1]} в среду пройдёт в Демо-214. Изменение отмечено в расписании.`, created_at: at(today, "08:00"), read_at: null },
     { id: id("news:results"), student_id: studentId, title: variant ? "Результаты опубликованы" : "Есть незакрытые дисциплины", body: variant ? "В успеваемости доступны экзамены, зачёты и курсовая работа." : "Математический анализ и физическая культура требуют внимания. Открой успеваемость и включи «Только долги».", created_at: at(addDays(today, -1), "16:00"), read_at: null },
     { id: id("news:requests"), student_id: studentId, title: variant ? "Заявление принято" : "Справка об обучении готова", body: "Статусы и история доступны в разделе «Справки и заявки». Это вымышленный пример для демонстрации.", created_at: at(addDays(today, -2), "12:00"), read_at: at(addDays(today, -1), "09:00") },
