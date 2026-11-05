@@ -1,0 +1,30 @@
+{
+  "origin": "https://student-portal-hackathon.ankajournal-cloudflare.workers.dev",
+  "source": "b0ed35e5eea15939c2dd6521e4224d65da86d5db",
+  "workerVersion": "8f06f30f-6444-458a-8728-5922a5f03a3a",
+  "environment": "Real published HTTPS app and Supabase, no fixtures, read-only product scenarios",
+  "checks": [
+    "A: вход в публичный кабинет успешен",
+    "A: неделя расписания загружена с сервера",
+    "Сегодня использует актуальную московскую дату",
+    "A: фильтр показывает два долга",
+    "A: прежняя история заявок загружена",
+    "A: Escape закрывает подтверждение без оплаты",
+    "A: неоплаченный счёт 3 сохранён для демонстрации",
+    "360px: нет горизонтального переполнения",
+    "360px: профиль A открывается через меню",
+    "360px: тёмная тема без горизонтального переполнения",
+    "Выход A скрывает профиль",
+    "B: после A показан свой профиль без профиля A",
+    "B: свой договор, договор A отсутствует",
+    "B: все счета оплачены",
+    "B: фильтр долгов пуст",
+    "B: уведомления загружены с сервера",
+    "Выход B возвращает форму входа без личного профиля"
+  ],
+  "limitations": [
+    "No new request or payment submitted; data and unread states preserved.",
+    "Persistent network failures and Moscow midnight were covered locally before release, not induced on the public origin.",
+    "Physical phone and screen reader not tested."
+  ]
+}
