@@ -1,0 +1,24 @@
+{
+  "source": "209c40f9a7dd7ee1164d672f640324b49795ef42",
+  "environment": "Actual React/Vite UI and Supabase SDK against isolated local HTTP fixtures; no cloud writes",
+  "checks": [
+    "GET reject до POST: подтверждённая заявка и ошибка истории видны одновременно",
+    "Поздний устойчивый GET reject после POST: заявка остаётся рядом с ошибкой истории",
+    "Повторное чтение восстанавливает полную историю без дубля",
+    "Поздний отказ закрытого RPC виден на странице",
+    "Сверка после потери ответа показывает серверную оплату",
+    "Отказ RPC не выдаётся за успешное подтверждение",
+    "Сервер фикстур: три явных создания → ровно три POST и три записи; автоматического повторного создания нет",
+    "Сервер фикстур: один payDemo RPC; после отказа выполнено повторное чтение счетов (всего 3 чтения за прогон)"
+  ],
+  "counters": {
+    "paymentCalls": 1,
+    "chargeReads": 3,
+    "requestPosts": 3,
+    "requests": 3
+  },
+  "notes": [
+    "A single 503 on GET was retried by SDK and recovered; persistent 503 was then used to verify UI rejection.",
+    "Payment fixture marks invoice paid before returning 503, simulating loss of confirmation; subsequent read recovers paid history."
+  ]
+}
