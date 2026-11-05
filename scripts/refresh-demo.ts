@@ -1,7 +1,10 @@
 // Explicit opt-in, dedicated demo project only. Never rotates passwords or deletes data.
 import { createClient } from "@supabase/supabase-js";
-import { createDemoData } from "./demo-data.ts";
+import { createDemoData, createDeadlineReminder } from "./demo-data.ts";
 
+const args = process.argv.slice(2);
+if (args.some(arg => arg !== "--reminders-only")) throw new Error("Unknown argument; supported: --reminders-only");
+const remindersOnly = args.includes("--reminders-only");
 const url = process.env.SUPABASE_URL;
 const key = process.env.SUPABASE_SECRET_KEY;
 if (!url || !key) throw new Error("Set SUPABASE_URL and SUPABASE_SECRET_KEY in ignored .env");
@@ -19,17 +22,22 @@ if (ids.size !== 2) throw new Error("Both existing demo accounts must be present
 // Complete preflight for both accounts before writing any rows.
 const profiles = await admin.from("profiles").select("student_id").in("student_id", [...ids.values()]);
 if (profiles.error || profiles.data?.length !== 2) throw new Error("Both demo profiles must exist before refreshing data");
+const generatedAt = new Date();
 for (const [variant, email] of emails.entries()) {
-  const demo = createDemoData(ids.get(email)!, variant as 0 | 1);
+  const demo = createDemoData(ids.get(email)!, variant as 0 | 1, generatedAt);
   const writes = [
     { table: "schedule_entries", run: () => admin.from("schedule_entries").upsert(demo.schedule, { onConflict: "id" }) },
     { table: "grades", run: () => admin.from("grades").upsert(demo.grades, { onConflict: "id" }) },
     { table: "requests", run: () => admin.from("requests").upsert(demo.requests, { onConflict: "id", ignoreDuplicates: true }) },
     { table: "notifications", run: () => admin.from("notifications").upsert(demo.notifications, { onConflict: "id", ignoreDuplicates: true }) },
   ];
-  for (const write of writes) {
+  const selectedWrites = remindersOnly ? [{
+    table: "notifications",
+    run: () => admin.from("notifications").upsert([createDeadlineReminder(ids.get(email)!, variant as 0 | 1, generatedAt)], { onConflict: "id", ignoreDuplicates: true }),
+  }] : writes;
+  for (const write of selectedWrites) {
     const { error } = await write.run();
     if (error) throw new Error(`Cannot refresh demo ${variant ? "B" : "A"} / ${write.table}: ${error.code}`);
   }
 }
-console.log("Refreshed fictional schedule, grades, request examples and news for A/B. Passwords, existing application states and read markers preserved.");
+console.log(remindersOnly ? "Added fictional deadline reminders only; existing rows and read markers preserved." : "Refreshed fictional schedule, grades, request examples and news for A/B. Passwords, existing application states and read markers preserved.");
