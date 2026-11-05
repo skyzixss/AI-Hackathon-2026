@@ -1,3 +1,4 @@
+import { useMoscowDay } from "../studies/useMoscowDay.ts";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Icon } from "../../app/Icon.tsx";
 import { ResourceState, useResource } from "../../app/resource.tsx";
@@ -35,7 +36,7 @@ export function Tuition({ api, sessionKey }: { api: TuitionApi; sessionKey: stri
   }, [selected]);
   useEffect(() => { if (receipt) success.current?.focus(); }, [receipt]);
 
-  function close() { if (!submitting.current) { setSelected(null); setError(false); } }
+  function close() { setSelected(null); setError(false); }
   async function confirm() {
     if (!selected || submitting.current) return;
     submitting.current = true; setPending(true); setError(false);
@@ -44,14 +45,17 @@ export function Tuition({ api, sessionKey }: { api: TuitionApi; sessionKey: stri
       if (!alive.current) return;
       if (paid.student_id !== sessionKey) throw new Error("Invoice owner mismatch");
       setSelected(null); setReceipt(paid); retry();
-    } catch { if (alive.current) setError(true); }
+    } catch { if (alive.current) { setError(true); retry(); } }
     finally { submitting.current = false; if (alive.current) setPending(false); }
   }
 
-  const today = moscowDay();
+  const paymentError = <p className="form-error" role="alert">Не удалось получить подтверждение оплаты. Проверяем историю счетов. Если обновление не удалось, нажмите «Повторить». Перед новой попыткой проверьте статус счёта: сервер мог уже провести платёж. Повторная попытка не создаст второй платёж.</p>;
+  const today = useMoscowDay();
   const data = state.status === "ready" ? tuitionSummary(state.data, today) : null;
   return <div className="tuition-page">
     <p className="tuition-demo-note"><Icon name="school" />Демо-оплата · Настоящие деньги не списываются</p>
+    {pending && <p role="status">Подтверждение ещё ожидается. Окно можно закрыть; это не отменяет запрос. Не повторяйте оплату до получения результата.</p>}
+    {error && !selected && paymentError}
     {receipt && <div ref={success} tabIndex={-1} role="status" className="tuition-success">
       <Icon name="check" size={24} /><div><strong>Демо-платёж проведён</strong>
         <p>{money(receipt.amount_kopecks)} · {receipt.title}</p>
@@ -107,14 +111,14 @@ export function Tuition({ api, sessionKey }: { api: TuitionApi; sessionKey: stri
       onCancel={event => { event.preventDefault(); close(); }}
       onClick={event => { if (event.target === event.currentTarget) close(); }}>
       {selected && <div className="tuition-dialog-body">
-        <div className="section-heading"><span className="pill">Учебный сценарий</span><button className="icon-button" aria-label="Закрыть оплату" disabled={pending} onClick={close}><Icon name="close" /></button></div>
+        <div className="section-heading"><span className="pill">Учебный сценарий</span><button className="icon-button" aria-label="Закрыть оплату" onClick={close}><Icon name="close" /></button></div>
         <h2 id="tuition-confirm-title">Демонстрационная оплата</h2>
         <p className="tuition-dialog-amount">{money(selected.amount_kopecks)}</p>
         <p>{selected.title}</p><p className="small muted">Договор {selected.contract_number}</p>
         <p className="tuition-dialog-note">Деньги не спишутся. Мы отметим учебный счёт оплаченным и сохраним подтверждение в истории. Данные банковской карты не нужны.</p>
-        {error && <p className="form-error" role="alert">Не удалось подтвердить оплату. Проверьте соединение и повторите. Повторная попытка не создаст второй платёж.</p>}
+        {error && paymentError}
         <div className="tuition-dialog-actions"><button className="button primary" disabled={pending} onClick={confirm}>{pending ? "Подтверждаем…" : "Подтвердить демо-оплату"}</button>
-          <button className="button secondary" disabled={pending} onClick={close}>Отмена</button></div>
+          <button className="button secondary" onClick={close}>Отмена</button></div>
       </div>}
     </dialog>
   </div>;

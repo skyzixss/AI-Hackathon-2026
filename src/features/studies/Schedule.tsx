@@ -1,3 +1,4 @@
+import { useMoscowDay } from "./useMoscowDay.ts";
 import { useCallback, useState } from "react";
 import type { Lesson } from "../../api/portal.ts";
 import type { Api } from "../../app/client.ts";
@@ -77,8 +78,9 @@ export function Schedule({
   sessionKey: string;
   compact?: boolean;
 }) {
-  const today = moscowDay();
-  const [day, setDay] = useState(today);
+  const today = useMoscowDay();
+  const [selectedDay, setDay] = useState<string | null>(null);
+  const day = selectedDay ?? today;
   const [mode, setMode] = useState<"day" | "week">("day");
   const range = scheduleRange(day, compact ? "day" : mode);
   const load = useCallback(
@@ -111,7 +113,7 @@ export function Schedule({
               aria-pressed={mode === "day"}
               onClick={() => {
                 setMode("day");
-                setDay(today);
+                setDay(null);
               }}
             >
               Сегодня

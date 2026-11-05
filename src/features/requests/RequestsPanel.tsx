@@ -16,13 +16,14 @@ export interface RequestsPanelProps {
 
 export function RequestsPanel({ api, sessionKey, onSubmitted }: RequestsPanelProps) {
   const { state, reload, update } = useLoad(sessionKey, () => api.requests());
+  const rows = state.data ?? [];
   return (
     <section className="pr-panel" aria-labelledby="pr-requests-title">
       <h2 id="pr-requests-title">Справки и заявления</h2>
       <RequestForm
         key={sessionKey}
         api={api}
-        onCreated={(r) => { update((list) => [r, ...list]); onSubmitted?.(r); }}
+        onCreated={(r) => { update((list) => list.some(item => item.id === r.id) ? list : [r, ...list], []); onSubmitted?.(r); }}
       />
       <h3>Мои заявки</h3>
       {state.status === 'loading' && <p className="pr-muted" role="status">Загружаем заявки…</p>}
@@ -34,9 +35,9 @@ export function RequestsPanel({ api, sessionKey, onSubmitted }: RequestsPanelPro
       {state.status === 'ready' && state.data.length === 0 && (
         <p className="pr-empty">Заявок пока нет. Выберите шаблон выше — это займёт минуту.</p>
       )}
-      {state.status === 'ready' && state.data.length > 0 && (
+      {rows.length > 0 && (
         <ul className="pr-list">
-          {state.data.map((r) => (
+          {rows.map((r) => (
             <li key={r.id} className="pr-card">
               <div className="pr-card-head">
                 <span className="pr-kind">{KIND_LABELS[r.kind]}</span>
