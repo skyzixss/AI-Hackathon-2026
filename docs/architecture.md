@@ -27,7 +27,7 @@ security advisor не сообщил замечаний. Облачная про
 
 Сайт опубликован в Cloudflare Workers Static Assets:
 [демо «Кампус»](https://student-portal-hackathon.ankajournal-cloudflare.workers.dev).
-Продуктовый код cd5ffa2; версия, хеши assets и 22 проверки публичной ссылки —
+Текущий продуктовый код main b0ed35e; версия, хеши assets и 17 проверок выпуска 05.11.2026 —
 [deployment.md](deployment.md). Конфигурация `wrangler.jsonc` использует `dist/`.
 Платные ресурсы не заказываем. Перед защитой проверяем доступность сервиса:
 [Supabase Free](https://supabase.com/pricing) может приостанавливаться после
@@ -55,8 +55,9 @@ SPA использует SDK-хранилище сессии и обновлен
 - [Static Assets](https://developers.cloudflare.com/workers/static-assets/)
 - [Cloudflare pricing](https://developers.cloudflare.com/workers/platform/pricing/)
 
-Открыто: исходная ссылка/дедлайн задания и повторная проверка доступности
-бесплатного сайта непосредственно перед защитой.
+Дедлайн и способ подачи подтверждены [регламентом](contest-submission.md).
+Открыто: оригинал задания/поля кабинета и повторная проверка доступности
+бесплатного сайта непосредственно перед показом.
 
 После настройки Auth Security Advisor сообщает одно предупреждение:
 проверка утёкших паролей отключена. Она доступна только на Pro и выше

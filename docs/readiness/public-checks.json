@@ -1,0 +1,27 @@
+{
+  "source": "b0ed35e5eea15939c2dd6521e4224d65da86d5db",
+  "version": "8f06f30f-6444-458a-8728-5922a5f03a3a",
+  "environment": "Published HTTPS origin and real Supabase; tab-scoped CDP offline verified on REST GET and POST with Network.loadingFailed ERR_INTERNET_DISCONNECTED",
+  "checks": [
+    "Клавиатура: Tab переводит фокус с email на пароль",
+    "На публичном origin запрос grades к Supabase блокируется offline",
+    "Offline чтение показывает ошибку и кнопку повтора",
+    "Offline POST заявки не достигает сервера",
+    "Offline POST показывает ошибку без ложного успеха",
+    "После восстановления сети история загружается, offline-заявки нет",
+    "При отказе выхода личные экраны скрыты",
+    "Повтор выхода после восстановления сети возвращает вход",
+    "После нового входа A кабинет восстановлен",
+    "После смены раздела фокус на заголовке",
+    "Ссылка пропуска навигации фокусирует основное содержимое",
+    "360px: меню открывается Enter и закрывается Escape",
+    "Новая вкладка восстанавливает существующую сессию",
+    "Выход в другой вкладке скрывает кабинет в исходной"
+  ],
+  "limitations": [
+    "No physical phone or actual screen-reader session; keyboard and semantic DOM checks only.",
+    "Cross-tab sign-out/session restoration verified; forced JWT expiry/refresh failure not induced.",
+    "No new server request or payment; offline POST failed before reaching server.",
+    "Cloud deadline reminder absent in current displayed notification titles; fictional seed addition requires separate approved cloud refresh."
+  ]
+}
