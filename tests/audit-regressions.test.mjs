@@ -4,6 +4,7 @@ import { readFile } from 'node:fs/promises';
 import assert from 'node:assert/strict';
 import { transformWithOxc } from 'vite';
 import * as dates from '../src/features/studies/dates.ts';
+import * as requestModel from '../src/features/requests/model.ts';
 import * as tuitionModel from '../src/features/payments/model.ts';
 
 function engine() {
@@ -52,6 +53,29 @@ test('confirmed insertion survives stale initial GET and duplicate server row', 
  result=render();assert.deepEqual(result.state.data,[created]);
 });
 
+for (const rejectFirst of [true, false]) test(`confirmed request stays visible when GET rejects ${rejectFirst ? 'before' : 'after'} POST`, async()=>{
+ const e=engine();let rejectGet;
+ const get=new Promise((_,reject)=>{rejectGet=reject;});
+ const {useLoad}=await sourceFunction('src/features/requests/useLoad.ts',['useLoad'],e.hooks);
+ const render=()=>{e.start();return useLoad('A',()=>get);};
+ let result=render();e.flush();result=render();
+ if(rejectFirst){rejectGet(new Error('offline'));await Promise.resolve();result=render();}
+ const created={id:'confirmed'};
+ result.update(list=>[created,...list],[]);
+ if(!rejectFirst){rejectGet(new Error('offline'));await Promise.resolve();}
+ result=render();assert.equal(result.state.status,'error');assert.deepEqual(result.state.data,[created]);
+});
+
+test('request history renders confirmed rows alongside its loading error',async()=>{
+ const row={id:'confirmed',kind:'certificate',status:'submitted',body:'Сохранённая заявка',created_at:'2026-11-05T12:00:00Z'};
+ const {RequestsPanel}=await sourceFunction('src/features/requests/RequestsPanel.tsx',['RequestsPanel'],{
+  ...jsxBindings,...requestModel,useLoad:()=>({state:{status:'error',error:new Error('offline'),data:[row]},reload(){},update(){}})
+ });
+ const tree=RequestsPanel({api:{},sessionKey:'A'});
+ assert.ok(find(tree,n=>n.type==='li'&&n.key===row.id));
+ assert.ok(find(tree,n=>n.props.role==='alert'));
+});
+
 test('Today follows Moscow midnight while an explicit selected date stays selected',async()=>{
  const RealDate=globalThis.Date;const oldWindow=globalThis.window,oldDocument=globalThis.document;
  let now=RealDate.parse('2026-11-04T20:59:59Z');let tick;
@@ -73,10 +97,10 @@ test('Today follows Moscow midnight while an explicit selected date stays select
  }finally{globalThis.Date=RealDate;globalThis.window=oldWindow;globalThis.document=oldDocument;}
 });
 
-test('stalled payment can close without cancelling or submitting twice; late success is retained',async()=>{
- const e=engine();let resolvePayment,calls=0,retries=0;
+for (const fails of [false,true]) test(`stalled payment closes safely; late ${fails ? 'failure is visible and reconciles' : 'success is retained'}`,async()=>{
+ const e=engine();let resolvePayment,rejectPayment,calls=0,retries=0;
  const charge={id:'demo',student_id:'A',title:'Demo',amount_kopecks:100,contract_number:'DEMO',due_on:'2026-11-15',paid_at:null,payment_reference:null,demo_only:true};
- const api={payDemo(){calls++;return new Promise(r=>resolvePayment=r);}};
+ const api={payDemo(){calls++;return new Promise((resolve,reject)=>{resolvePayment=resolve;rejectPayment=reject;});}};
  const oldDocument=globalThis.document;globalThis.document={body:{style:{overflow:''}}};
  try{
   const {Tuition}=await sourceFunction('src/features/payments/Tuition.tsx',['Tuition'],{...e.hooks,...jsxBindings,...dates,...tuitionModel,useMoscowDay:()=> '2026-11-05',Icon:()=>null,ResourceState:()=>null,useResource:()=>({state:{status:'ready',data:[charge]},retry(){retries++;}})});
@@ -88,6 +112,14 @@ test('stalled payment can close without cancelling or submitting twice; late suc
   find(tree,n=>n.type==='dialog').props.onCancel({preventDefault(){}});tree=render();assert.equal(dialog.open,false);
   find(tree,n=>n.type==='button'&&Array.isArray(n.props.children)&&n.props.children[0]==='Оплатить в демо').props.onClick();tree=render();
   assert.equal(find(tree,n=>n.type==='button'&&n.props.children==='Подтверждаем…').props.disabled,true);assert.equal(calls,1);
+  if(fails){
+   find(tree,n=>n.type==='dialog').props.onCancel({preventDefault(){}});tree=render();
+   rejectPayment(new Error('response lost'));await pending;tree=render();
+   assert.equal(retries,1);assert.equal(dialog.open,false);
+   assert.ok(find(tree,n=>n.props.role==='alert'));
+   assert.equal(find(tree,n=>n.type==='strong'&&n.props.children==='Демо-платёж проведён'),null);
+   return;
+  }
   resolvePayment({...charge,paid_at:'2026-11-05T12:00:00Z',payment_reference:'DEMO-test'});await pending;tree=render();
   assert.equal(retries,1);assert.ok(find(tree,n=>n.type==='strong'&&n.props.children==='Демо-платёж проведён'));assert.equal(dialog.open,false);
  }finally{globalThis.document=oldDocument;}

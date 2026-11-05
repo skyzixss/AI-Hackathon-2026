@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 export type LoadState<T> =
-  | { status: 'loading' }
-  | { status: 'error'; error: unknown }
+  | { status: 'loading'; data?: T }
+  | { status: 'error'; error: unknown; data?: T }
   | { status: 'ready'; data: T };
 
 /**
@@ -26,7 +26,7 @@ export function useLoad<T>(sessionKey: string, load: () => Promise<T>) {
         pending.current = [];
         setState({ status: 'ready', data: merged });
       } },
-      (error: unknown) => { if (my === attempt.current) setState({ status: 'error', error }); },
+      (error: unknown) => { if (my === attempt.current) setState(s => ({ status: 'error', error, data: s.data })); },
     );
   }, []);
 
@@ -37,9 +37,12 @@ export function useLoad<T>(sessionKey: string, load: () => Promise<T>) {
   }, [sessionKey, reload]);
 
   /** Local update after a confirmed server write (never before it). */
-  const update = useCallback((fn: (data: T) => T) => {
+  const update = useCallback((fn: (data: T) => T, fallback?: T) => {
     pending.current.push(fn);
-    setState((s) => (s.status === 'ready' ? { status: 'ready', data: fn(s.data) } : s));
+    setState((s) => {
+      const data = s.data ?? fallback;
+      return data === undefined ? s : { ...s, data: fn(data) };
+    });
   }, []);
 
   return { state, reload, update };
