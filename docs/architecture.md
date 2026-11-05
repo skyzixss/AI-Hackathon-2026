@@ -27,7 +27,7 @@ security advisor не сообщил замечаний. Облачная про
 
 Сайт опубликован в Cloudflare Workers Static Assets:
 [демо «Кампус»](https://student-portal-hackathon.ankajournal-cloudflare.workers.dev).
-Продуктовый код cd5ffa2; версия, хеши assets и 22 проверки публичной ссылки —
+Текущий продуктовый код main b0ed35e; версия, хеши assets и 17 проверок выпуска 05.11.2026 —
 [deployment.md](deployment.md). Конфигурация `wrangler.jsonc` использует `dist/`.
 Платные ресурсы не заказываем. Перед защитой проверяем доступность сервиса:
 [Supabase Free](https://supabase.com/pricing) может приостанавливаться после
