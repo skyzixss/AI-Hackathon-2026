@@ -1,0 +1,27 @@
+{
+  "sourceCommit": "3a5130e4c85664b3c5a31b651918d340477a3748",
+  "method": "Actual transformed source; deterministic model of React hooks, no browser/DB writes",
+  "results": [
+    {
+      "finding": "request-created-during-initial-read",
+      "confirmed": true,
+      "lostBeforeReady": true,
+      "controlAfterReadyRetains": true
+    },
+    {
+      "finding": "today-after-midnight",
+      "confirmed": true,
+      "actualToday": "2026-11-05",
+      "displayedDay": "2026-11-04",
+      "stateChangedOnTodayClick": false
+    },
+    {
+      "finding": "stalled-payment-traps-modal",
+      "confirmed": true,
+      "paymentCalls": 1,
+      "modalStillOpen": true,
+      "escapePrevented": true,
+      "allCloseControlsDisabled": true
+    }
+  ]
+}
