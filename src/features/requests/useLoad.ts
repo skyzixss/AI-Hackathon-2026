@@ -19,7 +19,7 @@ export function useLoad<T>(sessionKey: string, load: () => Promise<T>) {
 
   const reload = useCallback(() => {
     const my = ++attempt.current;
-    setState({ status: 'loading' });
+    setState(s => ({ status: 'loading', data: s.data }));
     loadRef.current().then(
       (data) => { if (my === attempt.current) {
         const merged = pending.current.reduce((value, change) => change(value), data);
@@ -32,6 +32,7 @@ export function useLoad<T>(sessionKey: string, load: () => Promise<T>) {
 
   useEffect(() => {
     pending.current = [];
+    setState({ status: 'loading' });
     reload();
     return () => { attempt.current++; };
   }, [sessionKey, reload]);

@@ -66,6 +66,25 @@ for (const rejectFirst of [true, false]) test(`confirmed request stays visible w
  result=render();assert.equal(result.state.status,'error');assert.deepEqual(result.state.data,[created]);
 });
 
+test('confirmed rows survive failed reloads but clear on account change',async()=>{
+ const e=engine();let rejectGet,key='A';
+ let get=new Promise((_,reject)=>{rejectGet=reject;});
+ const {useLoad}=await sourceFunction('src/features/requests/useLoad.ts',['useLoad'],e.hooks);
+ const render=()=>{e.start();return useLoad(key,()=>get);};
+ let result=render();e.flush();rejectGet(new Error('first failure'));await Promise.resolve();result=render();
+ result.update(list=>[{id:'A-confirmed'},...list],[]);result=render();
+ for(let i=0;i<2;i++){
+  get=new Promise((_,reject)=>{rejectGet=reject;});result.reload();result=render();
+  assert.deepEqual(result.state.data,[{id:'A-confirmed'}]);
+  rejectGet(new Error('retry failure'));await Promise.resolve();result=render();
+  assert.equal(result.state.status,'error');assert.deepEqual(result.state.data,[{id:'A-confirmed'}]);
+ }
+ key='B';get=new Promise((_,reject)=>{rejectGet=reject;});result=render();e.flush();result=render();
+ assert.equal(result.state.data,undefined);
+ rejectGet(new Error('B offline'));await Promise.resolve();result=render();assert.equal(result.state.data,undefined);
+ get=Promise.resolve([]);result.reload();await Promise.resolve();result=render();assert.deepEqual(result.state.data,[]);
+});
+
 test('request history renders confirmed rows alongside its loading error',async()=>{
  const row={id:'confirmed',kind:'certificate',status:'submitted',body:'Сохранённая заявка',created_at:'2026-11-05T12:00:00Z'};
  const {RequestsPanel}=await sourceFunction('src/features/requests/RequestsPanel.tsx',['RequestsPanel'],{
