@@ -17,6 +17,7 @@
 .tuition-balance dd.tuition-contract { font-size: 14px; overflow-wrap: anywhere; }
 .tuition-overdue { display: flex; gap: 8px; color: var(--negative); margin-bottom: 12px; font-size: 14px; }
 .tuition-schedule, .tuition-history { display: grid; }
+.tuition-show-more { margin-top: 8px; }
 .tuition-charge { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto 132px; gap: 16px; align-items: center; padding: 20px 0; border-top: 1px solid var(--color-border); }
 .tuition-charge-icon { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; color: var(--color-accent); background: var(--accent-soft); }
 .tuition-charge.is-paid .tuition-charge-icon { color: var(--positive); background: var(--positive-bg); }

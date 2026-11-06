@@ -7,6 +7,8 @@ import type { TuitionApi } from "./api.ts";
 import { money, tuitionSummary, type TuitionCharge } from "./model.ts";
 import "./tuition.css";
 
+const SCHEDULE_PREVIEW_LIMIT = 3;
+
 function dueDate(day: string) {
   return dateLabel(day, { day: "numeric", month: "long", year: "numeric" });
 }
@@ -22,6 +24,7 @@ export function Tuition({ api, sessionKey }: { api: TuitionApi; sessionKey: stri
   const [pending, setPending] = useState(false);
   const [error, setError] = useState(false);
   const [receipt, setReceipt] = useState<TuitionCharge | null>(null);
+  const [expandedScheduleFor, setExpandedScheduleFor] = useState<string | null>(null);
   const dialog = useRef<HTMLDialogElement>(null);
   const success = useRef<HTMLDivElement>(null);
   const alive = useRef(true);
@@ -52,6 +55,10 @@ export function Tuition({ api, sessionKey }: { api: TuitionApi; sessionKey: stri
   const paymentError = <p className="form-error" role="alert">Не удалось получить подтверждение оплаты. Проверяем историю счетов. Если обновление не удалось, нажмите «Повторить». Перед новой попыткой проверьте статус счёта: сервер мог уже провести платёж. Повторная попытка не создаст второй платёж.</p>;
   const today = useMoscowDay();
   const data = state.status === "ready" ? tuitionSummary(state.data, today) : null;
+  const scheduleExpanded = expandedScheduleFor === sessionKey;
+  const visibleSchedule = data
+    ? scheduleExpanded ? data.schedule : data.schedule.slice(0, SCHEDULE_PREVIEW_LIMIT)
+    : [];
   return <div className="tuition-page">
     <p className="tuition-demo-note"><Icon name="school" />Демо-оплата · Настоящие деньги не списываются</p>
     {pending && <p role="status">Подтверждение ещё ожидается. Окно можно закрыть; это не отменяет запрос. Не повторяйте оплату до получения результата.</p>}
@@ -89,7 +96,7 @@ export function Tuition({ api, sessionKey }: { api: TuitionApi; sessionKey: stri
       </div>
       <section className="panel" aria-labelledby="tuition-plan-title">
         <div className="section-heading"><h2 id="tuition-plan-title">График оплаты</h2><span className="small muted">{data.unpaid.length ? `Платежей впереди: ${data.unpaid.length}` : "Все платежи внесены"}</span></div>
-        <ul className="tuition-schedule">{[...state.data].sort((a, b) => a.due_on.localeCompare(b.due_on)).map(charge =>
+        <ul id="tuition-schedule" className="tuition-schedule">{visibleSchedule.map(charge =>
           <li key={charge.id} className={charge.paid_at ? "tuition-charge is-paid" : "tuition-charge"}>
             <span className="tuition-charge-icon"><Icon name={charge.paid_at ? "check" : "calendar"} /></span>
             <div className="tuition-charge-copy"><h3>{charge.title}</h3><p>{dueDate(charge.due_on)}</p></div>
@@ -98,6 +105,11 @@ export function Tuition({ api, sessionKey }: { api: TuitionApi; sessionKey: stri
               disabled={!charge.demo_only} aria-label={`Демо-оплата: ${charge.title}`} onClick={() => { setSelected(charge); setError(false); }}>
                 {charge.due_on < today ? "Просрочен · оплатить" : "Оплатить"}</button>}
           </li>)}</ul>
+        {data.schedule.length > SCHEDULE_PREVIEW_LIMIT && <button className="button secondary tuition-show-more"
+          aria-expanded={scheduleExpanded} aria-controls="tuition-schedule"
+          onClick={() => setExpandedScheduleFor(scheduleExpanded ? null : sessionKey)}>
+          {scheduleExpanded ? "Свернуть" : `Показать больше (${data.schedule.length - SCHEDULE_PREVIEW_LIMIT})`}
+        </button>}
       </section>
       <section className="panel" aria-labelledby="tuition-history-title">
         <div className="section-heading"><h2 id="tuition-history-title">История платежей</h2><span className="small muted">Только подтверждённые</span></div>

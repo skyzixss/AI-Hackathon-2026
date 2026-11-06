@@ -25,6 +25,26 @@ test("tuition totals distinguish upcoming, overdue and settled invoices; fixture
   assert.match(money(4500000), /45\s000/); assert.match(money(4512), /45,12/);
 });
 
+test("tuition lists show newest dates first without changing the next unpaid invoice or input", () => {
+  const base = demoTuition(A, 0, new Date("2026-11-04T09:00:00Z"))[0];
+  const charges = [
+    { ...base, id: "dec", due_on: "2026-12-15", paid_at: null, payment_reference: null },
+    { ...base, id: "oct", due_on: "2026-10-15", paid_at: "2026-11-06T11:30:00+03:00" },
+    { ...base, id: "sep", due_on: "2026-09-15", paid_at: "2026-11-06T09:00:00Z" },
+    { ...base, id: "nov", due_on: "2026-11-15", paid_at: "2026-11-06T09:00:00Z" },
+    { ...base, id: "aug", due_on: "2026-08-15", paid_at: null, payment_reference: null },
+  ];
+  const original = structuredClone(charges);
+  const summary = tuitionSummary(charges, "2026-11-06");
+  assert.deepEqual(summary.schedule.map(x => x.id), ["dec", "nov", "oct", "sep", "aug"]);
+  assert.deepEqual(summary.paid.map(x => x.id), ["nov", "sep", "oct"]);
+  assert.equal(summary.next?.id, "aug");
+  assert.equal(summary.balance, 9000000);
+  assert.equal(summary.paidTotal, 13500000);
+  assert.equal(summary.overdue, 1);
+  assert.deepEqual(charges, original);
+});
+
 test("tuition SDK sends only invoice ID, rejects invalid/unconfirmed writes and propagates errors", async () => {
   const charge = demoTuition(A, 0, new Date("2026-11-04Z"))[1];
   let mode = "list", calls = 0;

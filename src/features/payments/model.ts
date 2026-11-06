@@ -17,10 +17,12 @@ export function money(kopecks: number) {
 }
 
 export function tuitionSummary(charges: TuitionCharge[], today: string) {
+  const schedule = [...charges].sort((a, b) => b.due_on.localeCompare(a.due_on));
   const unpaid = charges.filter(charge => !charge.paid_at).sort((a, b) => a.due_on.localeCompare(b.due_on));
-  const paid = charges.filter(charge => charge.paid_at).sort((a, b) => b.paid_at!.localeCompare(a.paid_at!));
+  const paid = charges.filter(charge => charge.paid_at).sort((a, b) =>
+    Date.parse(b.paid_at!) - Date.parse(a.paid_at!) || b.due_on.localeCompare(a.due_on));
   return {
-    unpaid, paid, next: unpaid[0] ?? null,
+    schedule, unpaid, paid, next: unpaid[0] ?? null,
     balance: unpaid.reduce((sum, charge) => sum + charge.amount_kopecks, 0),
     paidTotal: paid.reduce((sum, charge) => sum + charge.amount_kopecks, 0),
     overdue: unpaid.filter(charge => charge.due_on < today).length,
