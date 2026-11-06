@@ -32,6 +32,7 @@ function currentPage(): Page {
 type Auth =
   | { status: "checking" }
   | { status: "error" }
+  | { status: "expired" }
   | { status: "ready"; session: Session | null };
 
 export function App() {
@@ -42,6 +43,10 @@ export function App() {
   const [leaving, setLeaving] = useState(false);
   const [logoutError, setLogoutError] = useState(false);
   const hadSession = useRef(false);
+  const stateHeading = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    if (auth.status === "expired" || auth.status === "error") stateHeading.current?.focus();
+  }, [auth.status]);
   useEffect(() => {
     if (!connection) return;
     let active = true;
@@ -67,6 +72,32 @@ export function App() {
       subscription.unsubscribe();
     };
   }, []);
+  useEffect(() => {
+    if (auth.status !== "ready" || !auth.session?.expires_at) return;
+    const { expires_at: expiresAt, user } = auth.session;
+    let timer: number;
+    // Retryable refresh failures retain the SDK session. Hide cached private
+    // screens at actual expiry while allowing a later TOKEN_REFRESHED to recover.
+    const checkExpiry = () => {
+      window.clearTimeout(timer);
+      const remaining = expiresAt * 1000 - Date.now();
+      if (remaining <= 0) {
+        setAuth(current => current.status === "ready" &&
+          current.session?.user.id === user.id && current.session.expires_at === expiresAt
+          ? { status: "expired" } : current);
+      } else {
+        timer = window.setTimeout(checkExpiry, Math.min(remaining, 2_147_483_647));
+      }
+    };
+    checkExpiry();
+    window.addEventListener("focus", checkExpiry);
+    document.addEventListener("visibilitychange", checkExpiry);
+    return () => {
+      window.clearTimeout(timer);
+      window.removeEventListener("focus", checkExpiry);
+      document.removeEventListener("visibilitychange", checkExpiry);
+    };
+  }, [auth]);
   async function signOut() {
     if (!connection) return;
     // Immediately unmount private screens, even if the network call fails.
@@ -105,14 +136,17 @@ export function App() {
     );
   if (auth.status !== "ready")
     return (
-      <main className="full-state">
+      <main className="full-state" aria-live="polite">
         <span className="brand-mark">К</span>
-        <h1>
-          {auth.status === "error"
+        <h1 ref={stateHeading} tabIndex={-1}>
+          {auth.status === "expired"
+            ? "Не удалось обновить сессию"
+            : auth.status === "error"
             ? "Не удалось проверить сессию"
             : "Открываем твой кампус…"}
         </h1>
-        {auth.status === "error" ? (
+        {auth.status === "expired" && <p>Срок сессии истёк. Личные данные скрыты. Проверьте соединение и попробуйте снова.</p>}
+        {auth.status !== "checking" ? (
           <button
             className="button primary"
             onClick={() => window.location.reload()}

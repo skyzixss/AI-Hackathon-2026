@@ -14,6 +14,7 @@ function engine() {
     start() {cursor = 0; dirty = false;},
     dirty() {return dirty;},
     flush() {const pending=effects;effects=[];for(const f of pending)f();},
+    dispose() {for(const slot of slots)slot?.cleanup?.();},
     hooks: {
       useState(initial) {
         const i=cursor++; if(!(i in slots))slots[i]=typeof initial==='function'?initial():initial;
@@ -21,7 +22,7 @@ function engine() {
       },
       useRef(initial) {const i=cursor++;if(!(i in slots))slots[i]={current:initial};return slots[i];},
       useCallback(fn,deps) {const i=cursor++;if(!slots[i]||!same(slots[i].deps,deps))slots[i]={fn,deps};return slots[i].fn;},
-      useEffect(fn,deps) {const i=cursor++;if(!slots[i]||!same(slots[i].deps,deps)){slots[i]={deps};effects.push(fn);}},
+      useEffect(fn,deps) {const i=cursor++;if(!slots[i]||!same(slots[i].deps,deps)){const previous=slots[i];const slot={deps};slots[i]=slot;effects.push(()=>{previous?.cleanup?.();slot.cleanup=fn();});}},
     },
   };
 }
@@ -39,6 +40,33 @@ function find(tree,predicate) {
   if(predicate(tree))return tree;
   return find(tree.props?.children,predicate);
 }
+
+test('expired access hides private screens during retryable refresh and resumes after renewal',async()=>{
+ const RealDate=globalThis.Date,oldWindow=globalThis.window,oldDocument=globalThis.document;
+ let now=RealDate.parse('2026-11-06T09:00:00Z'),nextTimer=0,emit;
+ const timers=new Map(),listeners=new Map();
+ const on=(name,fn)=>{if(!listeners.has(name))listeners.set(name,new Set());listeners.get(name).add(fn);};
+ const off=(name,fn)=>listeners.get(name)?.delete(fn);
+ globalThis.Date=class extends RealDate{constructor(...args){super(...(args.length?args:[now]));}static now(){return now;}};
+ globalThis.window={location:{hash:'#home',reload(){}},setTimeout(fn,delay){const id=++nextTimer;timers.set(id,{fn,at:now+delay});return id;},clearTimeout(id){timers.delete(id);},addEventListener:on,removeEventListener:off};
+ globalThis.document={addEventListener:on,removeEventListener:off};
+ const e=engine();
+ try{
+  const connection={client:{auth:{onAuthStateChange(fn){emit=fn;return{data:{subscription:{unsubscribe(){}}}};}}},api:{},tuitionApi:{}};
+  const {App}=await sourceFunction('src/app/App.tsx',['App'],{...e.hooks,...jsxBindings,connection,Login:function Login(){}});
+  const render=()=>{e.start();const tree=App();e.flush();return tree;};
+  const privateScreen=tree=>typeof tree.type==='function'&&tree.type.name==='StudentPortal';
+  render();emit('SIGNED_IN',{user:{id:'A'},expires_at:now/1000+60});let tree=render();assert.ok(privateScreen(tree));
+  now+=61000;for(const [id,t] of [...timers])if(t.at<=now){timers.delete(id);t.fn();}
+  tree=render();assert.equal(privateScreen(tree),false,'expired cached profile must be hidden even without SIGNED_OUT');
+  assert.ok(find(tree,n=>n.type==='h1'&&n.props.children==='Не удалось обновить сессию'));
+  const renewed={user:{id:'A'},expires_at:now/1000+60};emit('TOKEN_REFRESHED',renewed);tree=render();assert.ok(privateScreen(tree));
+  const stale=[...timers.values()].map(t=>t.fn);
+  emit('TOKEN_REFRESHED',{user:{id:'A'},expires_at:now/1000+3600});tree=render();
+  now+=61000;for(const fn of stale)fn();tree=render();assert.ok(privateScreen(tree),'old expiry callback must not invalidate renewed access');
+  now+=3600000;for(const fn of [...(listeners.get('focus')??[])])fn();tree=render();assert.equal(privateScreen(tree),false,'return from suspended tab checks actual expiry');
+ }finally{e.dispose();globalThis.Date=RealDate;globalThis.window=oldWindow;globalThis.document=oldDocument;}
+});
 
 test('confirmed insertion survives stale initial GET and duplicate server row', async()=>{
  const e=engine();let resolveGet;let get=new Promise(r=>resolveGet=r);
