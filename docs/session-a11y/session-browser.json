@@ -1,0 +1,53 @@
+{
+  "base": "d363c03524fc14fb11d874cb169393387b0e068f",
+  "appSha256": "b84db29fea5aaa879f65b5375d0c34460d54a50b0e4dc390b4b12b0a82f89d90",
+  "chrome": "156.0.8078.80",
+  "environment": "Actual React + Supabase SDK against isolated HTTP fixtures; controlled clock; no cloud credentials or writes",
+  "findings": [
+    {
+      "check": "Healthy refresh succeeds",
+      "result": true
+    },
+    {
+      "check": "Proactive 400 preserves still-valid access",
+      "result": true
+    },
+    {
+      "check": "Expired terminal failure removes private screens",
+      "result": true
+    },
+    {
+      "check": "Expired terminal failure removes SDK session",
+      "result": true
+    },
+    {
+      "check": "B after expired A sees only B",
+      "result": true
+    },
+    {
+      "check": "Expired 503 hides private screens",
+      "result": true
+    },
+    {
+      "check": "Expired warning receives keyboard focus",
+      "result": true
+    },
+    {
+      "check": "Expired warning offers recovery",
+      "result": true
+    },
+    {
+      "check": "Recovery restores B without A",
+      "result": true
+    },
+    {
+      "check": "Old deadline does not invalidate renewed access",
+      "result": true
+    }
+  ],
+  "counts": {
+    "refreshCalls": 5,
+    "passwordCalls": 2
+  },
+  "pageErrors": []
+}

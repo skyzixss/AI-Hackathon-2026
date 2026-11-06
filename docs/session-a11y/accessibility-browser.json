@@ -1,0 +1,455 @@
+{
+  "environment": "Actual Chrome 156.0.8078.80 via explicitly approved Playwright 1.57; React and SDK against isolated HTTP fixtures; controlled clock. Not cloud, physical phone or screen reader.",
+  "findings": [
+    {
+      "check": "Expired access plus retryable 503 hides private screens and offers retry",
+      "result": true
+    },
+    {
+      "check": "Connection restored renews access and restores only B",
+      "result": true
+    },
+    {
+      "check": "Old expiry deadline does not hide renewed access",
+      "result": true
+    },
+    {
+      "check": "Skip link focuses main",
+      "result": true
+    },
+    {
+      "check": "Keyboard navigation focuses route heading",
+      "result": true
+    },
+    {
+      "check": "Mobile menu opens with Enter",
+      "result": true
+    },
+    {
+      "check": "Native mobile dialog traps keyboard focus",
+      "result": "observed",
+      "detail": "Native Chrome briefly focuses browser chrome (document.hasFocus=false); no background page control received focus."
+    },
+    {
+      "check": "Escape closes mobile menu and returns focus",
+      "result": true
+    },
+    {
+      "check": "Mobile keyboard route closes menu and focuses heading",
+      "result": true
+    },
+    {
+      "check": "Request validation is associated with the field and announced",
+      "result": true,
+      "associated": "0 / 2000 Опишите, что нужно: поле не может быть пустым.",
+      "detail": {
+        "invalid": "true",
+        "messages": [
+          {
+            "text": "0 / 2000",
+            "live": null
+          },
+          {
+            "text": "Опишите, что нужно: поле не может быть пустым.",
+            "live": "polite"
+          }
+        ]
+      }
+    },
+    {
+      "check": "Reflow: seven routes at 320/640 CSS px in both themes",
+      "result": true,
+      "rows": [
+        {
+          "theme": "dark",
+          "width": 640,
+          "route": "home",
+          "fits": true,
+          "controls": true
+        },
+        {
+          "theme": "dark",
+          "width": 640,
+          "route": "schedule",
+          "fits": true,
+          "controls": true
+        },
+        {
+          "theme": "dark",
+          "width": 640,
+          "route": "grades",
+          "fits": true,
+          "controls": true
+        },
+        {
+          "theme": "dark",
+          "width": 640,
+          "route": "requests",
+          "fits": true,
+          "controls": true
+        },
+        {
+          "theme": "dark",
+          "width": 640,
+          "route": "notifications",
+          "fits": true,
+          "controls": true
+        },
+        {
+          "theme": "dark",
+          "width": 640,
+          "route": "payments",
+          "fits": true,
+          "controls": true
+        },
+        {
+          "theme": "dark",
+          "width": 640,
+          "route": "profile",
+          "fits": true,
+          "controls": true
+        },
+        {
+          "theme": "dark",
+          "width": 320,
+          "route": "home",
+          "fits": true,
+          "controls": true
+        },
+        {
+          "theme": "dark",
+          "width": 320,
+          "route": "schedule",
+          "fits": true,
+          "controls": true
+        },
+        {
+          "theme": "dark",
+          "width": 320,
+          "route": "grades",
+          "fits": true,
+          "controls": true
+        },
+        {
+          "theme": "dark",
+          "width": 320,
+          "route": "requests",
+          "fits": true,
+          "controls": true
+        },
+        {
+          "theme": "dark",
+          "width": 320,
+          "route": "notifications",
+          "fits": true,
+          "controls": true
+        },
+        {
+          "theme": "dark",
+          "width": 320,
+          "route": "payments",
+          "fits": true,
+          "controls": true
+        },
+        {
+          "theme": "dark",
+          "width": 320,
+          "route": "profile",
+          "fits": true,
+          "controls": true
+        },
+        {
+          "theme": "light",
+          "width": 640,
+          "route": "home",
+          "fits": true,
+          "controls": true
+        },
+        {
+          "theme": "light",
+          "width": 640,
+          "route": "schedule",
+          "fits": true,
+          "controls": true
+        },
+        {
+          "theme": "light",
+          "width": 640,
+          "route": "grades",
+          "fits": true,
+          "controls": true
+        },
+        {
+          "theme": "light",
+          "width": 640,
+          "route": "requests",
+          "fits": true,
+          "controls": true
+        },
+        {
+          "theme": "light",
+          "width": 640,
+          "route": "notifications",
+          "fits": true,
+          "controls": true
+        },
+        {
+          "theme": "light",
+          "width": 640,
+          "route": "payments",
+          "fits": true,
+          "controls": true
+        },
+        {
+          "theme": "light",
+          "width": 640,
+          "route": "profile",
+          "fits": true,
+          "controls": true
+        },
+        {
+          "theme": "light",
+          "width": 320,
+          "route": "home",
+          "fits": true,
+          "controls": true
+        },
+        {
+          "theme": "light",
+          "width": 320,
+          "route": "schedule",
+          "fits": true,
+          "controls": true
+        },
+        {
+          "theme": "light",
+          "width": 320,
+          "route": "grades",
+          "fits": true,
+          "controls": true
+        },
+        {
+          "theme": "light",
+          "width": 320,
+          "route": "requests",
+          "fits": true,
+          "controls": true
+        },
+        {
+          "theme": "light",
+          "width": 320,
+          "route": "notifications",
+          "fits": true,
+          "controls": true
+        },
+        {
+          "theme": "light",
+          "width": 320,
+          "route": "payments",
+          "fits": true,
+          "controls": true
+        },
+        {
+          "theme": "light",
+          "width": 320,
+          "route": "profile",
+          "fits": true,
+          "controls": true
+        }
+      ]
+    },
+    {
+      "check": "Measured design-token contrast pairs",
+      "result": "measured",
+      "contrasts": [
+        {
+          "theme": "dark",
+          "fg": "--color-text",
+          "bg": "--color-surface",
+          "ratio": 15.29
+        },
+        {
+          "theme": "dark",
+          "fg": "--color-muted",
+          "bg": "--color-bg",
+          "ratio": 9.66
+        },
+        {
+          "theme": "dark",
+          "fg": "--color-muted",
+          "bg": "--color-surface",
+          "ratio": 8.54
+        },
+        {
+          "theme": "dark",
+          "fg": "--color-accent",
+          "bg": "--color-surface",
+          "ratio": 9.23
+        },
+        {
+          "theme": "dark",
+          "fg": "--color-accent",
+          "bg": "--accent-soft",
+          "ratio": 7.04
+        },
+        {
+          "theme": "light",
+          "fg": "--color-text",
+          "bg": "--color-surface",
+          "ratio": 15.89
+        },
+        {
+          "theme": "light",
+          "fg": "--color-muted",
+          "bg": "--color-bg",
+          "ratio": 5.86
+        },
+        {
+          "theme": "light",
+          "fg": "--color-muted",
+          "bg": "--color-surface",
+          "ratio": 6.34
+        },
+        {
+          "theme": "light",
+          "fg": "--color-accent",
+          "bg": "--color-surface",
+          "ratio": 6.48
+        },
+        {
+          "theme": "light",
+          "fg": "--color-accent",
+          "bg": "--accent-soft",
+          "ratio": 5.6
+        }
+      ]
+    },
+    {
+      "check": "Reduced motion disables route animation",
+      "result": true
+    },
+    {
+      "check": "Healthy SDK refresh succeeds",
+      "result": true
+    },
+    {
+      "check": "Proactive 400 preserves genuinely valid access",
+      "result": true
+    },
+    {
+      "check": "Terminal 400 on expired access ends SDK session",
+      "result": true
+    },
+    {
+      "check": "A re-login after expired B clears B data",
+      "result": true
+    },
+    {
+      "check": "Expiry warning receives keyboard focus",
+      "result": true
+    },
+    {
+      "check": "Contest submission fields",
+      "result": "not inspected",
+      "reason": "page.goto: Timeout 20000ms exceeded.",
+      "credentialsEntered": false
+    },
+    {
+      "check": "Tab never focuses inert background controls",
+      "result": true,
+      "trace": [
+        {
+          "tag": "A",
+          "hasDocumentFocus": true,
+          "insideDialog": true
+        },
+        {
+          "tag": "A",
+          "hasDocumentFocus": true,
+          "insideDialog": true
+        },
+        {
+          "tag": "A",
+          "hasDocumentFocus": true,
+          "insideDialog": true
+        },
+        {
+          "tag": "BUTTON",
+          "hasDocumentFocus": true,
+          "insideDialog": true
+        },
+        {
+          "tag": "BODY",
+          "hasDocumentFocus": false,
+          "insideDialog": false
+        },
+        {
+          "tag": "A",
+          "hasDocumentFocus": true,
+          "insideDialog": true
+        },
+        {
+          "tag": "BUTTON",
+          "hasDocumentFocus": true,
+          "insideDialog": true
+        },
+        {
+          "tag": "A",
+          "hasDocumentFocus": true,
+          "insideDialog": true
+        },
+        {
+          "tag": "A",
+          "hasDocumentFocus": true,
+          "insideDialog": true
+        },
+        {
+          "tag": "A",
+          "hasDocumentFocus": true,
+          "insideDialog": true
+        },
+        {
+          "tag": "A",
+          "hasDocumentFocus": true,
+          "insideDialog": true
+        },
+        {
+          "tag": "A",
+          "hasDocumentFocus": true,
+          "insideDialog": true
+        },
+        {
+          "tag": "A",
+          "hasDocumentFocus": true,
+          "insideDialog": true
+        },
+        {
+          "tag": "A",
+          "hasDocumentFocus": true,
+          "insideDialog": true
+        },
+        {
+          "tag": "BUTTON",
+          "hasDocumentFocus": true,
+          "insideDialog": true
+        },
+        {
+          "tag": "BODY",
+          "hasDocumentFocus": false,
+          "insideDialog": false
+        }
+      ]
+    },
+    {
+      "check": "Login Tab moves from email to password",
+      "result": true
+    }
+  ],
+  "counts": {
+    "refreshCalls": 70,
+    "passwordCalls": 2
+  },
+  "pageErrors": [],
+  "base": "d363c03524fc14fb11d874cb169393387b0e068f",
+  "appSha256": "b84db29fea5aaa879f65b5375d0c34460d54a50b0e4dc390b4b12b0a82f89d90"
+}
