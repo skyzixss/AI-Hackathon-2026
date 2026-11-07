@@ -1,0 +1,83 @@
+{
+  "checked_at": "2026-11-07T10:19:07.699Z",
+  "origin": "https://student-portal-hackathon.ankajournal-cloudflare.workers.dev",
+  "source_commit": "11f4bb7bc1fa93cd54d6629f9796a5456d57d25b",
+  "version": "c7955517-51c9-458c-b5f8-c4465855a610",
+  "method": "Real public HTTPS app and Supabase, no fixtures",
+  "mutations": "Auth sign-in/out only; no payment, application or notification writes",
+  "checks": [
+    {
+      "name": "A: restored session",
+      "pass": true
+    },
+    {
+      "name": "A: three invoices newest first",
+      "pass": true
+    },
+    {
+      "name": "A: own contract and current totals",
+      "pass": true
+    },
+    {
+      "name": "A: history has three paid rows",
+      "pass": true
+    },
+    {
+      "name": "No show more for exactly three invoices",
+      "pass": true
+    },
+    {
+      "name": "Logout hides personal data",
+      "pass": true
+    },
+    {
+      "name": "B: real login and own profile",
+      "pass": true
+    },
+    {
+      "name": "B: own contract and totals",
+      "pass": true
+    },
+    {
+      "name": "B: no A contract or amount",
+      "pass": true
+    },
+    {
+      "name": "B: three invoices newest first",
+      "pass": true
+    },
+    {
+      "name": "B: full paid history",
+      "pass": true
+    },
+    {
+      "name": "B: dark theme 360px no overflow",
+      "pass": true
+    },
+    {
+      "name": "B: light theme 360px no overflow",
+      "pass": true
+    },
+    {
+      "name": "B: mobile menu opens own profile",
+      "pass": true
+    },
+    {
+      "name": "A: relogin restores own payment data",
+      "pass": true
+    },
+    {
+      "name": "A: reload preserves session, totals and order",
+      "pass": true
+    },
+    {
+      "name": "A: desktop no horizontal overflow",
+      "pass": true
+    }
+  ],
+  "limitations": [
+    "Exactly three cloud invoices per student; show-more covered locally before merge",
+    "Network/session failure not repeated on public origin",
+    "No physical phone or screen reader"
+  ]
+}
