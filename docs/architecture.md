@@ -27,7 +27,9 @@ security advisor не сообщил замечаний. Облачная про
 
 Сайт опубликован в Cloudflare Workers Static Assets:
 [демо «Кампус»](https://student-portal-hackathon.ankajournal-cloudflare.workers.dev).
-Текущий опубликованный код main 6a05a1b; версия, хеши assets и 15 проверок выпуска 06.11.2026 —
+Текущий опубликованный продуктовый код main 11f4bb7; последующие коммиты
+документации не требуют нового развёртывания. Версия, хеши assets и 17 проверок
+выпуска 07.11.2026 —
 [deployment.md](deployment.md). Конфигурация `wrangler.jsonc` использует `dist/`.
 Платные ресурсы не заказываем. Перед защитой проверяем доступность сервиса:
 [Supabase Free](https://supabase.com/pricing) может приостанавливаться после
