@@ -1,0 +1,40 @@
+{
+  "generated_at": "2026-11-08T12:57:07.441004+00:00",
+  "status": "working draft; not submitted",
+  "sources": [
+    {
+      "path": "docs/process/skyzixss.md",
+      "sha256": "e55ae42a9fc35a219102b1bb24a3e3b98717836c22f358cdd27f1ff184f7c18a"
+    },
+    {
+      "path": "docs/process/artem.md",
+      "sha256": "1b328cd1ff1d667bb409b86177b9862f41a1eae88321ecc251430e93ffcf9f8d"
+    },
+    {
+      "path": "docs/process/build_report.py",
+      "sha256": "a813cdce5ff57d2e5f387df875f3d5657051c4613465a2e3aadcbfdeb7ac41ad"
+    }
+  ],
+  "pdf": {
+    "path": "docs/process/campus-ai-process-draft.pdf",
+    "sha256": "db41462a1c002af372fec353d5ba0a95acb3ab945e74dacf954859c49ad5c2a4",
+    "bytes": 4027073,
+    "pages": 12
+  },
+  "dependencies": {
+    "reportlab": "4.4.9",
+    "Pillow": "13.0.0",
+    "pypdf": "6.21.4"
+  },
+  "checks": {
+    "source_links_valid": 57,
+    "pdf_text_private_values_scan": "passed",
+    "pages_rendered": 12,
+    "visual_review": "All 12 pages contact sheet; dense pages 8/9 full size; no clipping found",
+    "final_encoding_visual_equivalence": "All 12 rendered pages pixel-identical to inspected version"
+  },
+  "missing": [
+    "PUPSIK359 original selected prompts and tool inventory",
+    "Read actual submission form after scheduled opening"
+  ]
+}
