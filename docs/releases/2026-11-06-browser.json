@@ -1,0 +1,29 @@
+{
+  "source": "6a05a1b83b1c6def42e4623c4ed810b3abcf88d1",
+  "workerVersion": "d8ef30ee-6338-4d31-91fe-e1baf4c98b8a",
+  "origin": "https://student-portal-hackathon.ankajournal-cloudflare.workers.dev",
+  "environment": "Real published HTTPS UI and Supabase, no fixtures or clock manipulation",
+  "checks": [
+    "A: вход и свой профиль",
+    "A: реальное расписание недели загружается",
+    "A: прежняя история заявок сохранена",
+    "A: прежнее дедлайн-напоминание R5 загружается",
+    "A: неоплаченный счёт для показа сохранён",
+    "A: выход скрывает кабинет",
+    "B: после A показан свой профиль без профиля A",
+    "B: заявки читаются, контрольная заявка A не показана",
+    "B: своё расписание загружается",
+    "B: свой договор без договора A, все счета оплачены",
+    "360px: светлая тема без горизонтального переполнения",
+    "360px: тёмная тема без горизонтального переполнения",
+    "360px: профиль B открывается из меню",
+    "B: reload сохраняет доступ к своему профилю",
+    "B: выход скрывает личные экраны"
+  ],
+  "limitations": [
+    "No new requests/payments, read-marker changes, seed, migrations, password or Auth-setting changes.",
+    "No forced JWT expiry/refresh outage on public origin; independent local review of PR21 used isolated HTTP fixtures and short tokens with real timers.",
+    "Physical phone and real screen reader not tested; VoiceOver work cancelled by user.",
+    "Contest form delegated to Artem by explicit user request."
+  ]
+}

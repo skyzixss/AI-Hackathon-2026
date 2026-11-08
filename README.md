@@ -9,7 +9,7 @@ Auth/PostgreSQL и Cloudflare Workers Static Assets; бесплатные тар
 Репозиторий: https://github.com/skyzixss/AI-Hackathon-2026
 
 [Открыть работающее демо «Кампус»](https://student-portal-hackathon.ankajournal-cloudflare.workers.dev).
-Опубликован main `b0ed35e` с одобренными исправлениями PR №18.
+Опубликован main `6a05a1b` с одобренным исправлением истечения сессии PR №21.
 [Проверки опубликованной версии и ограничения](docs/deployment.md).
 
 ## Возможности и критерии готовности
